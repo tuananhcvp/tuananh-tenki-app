@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ATenki</string>
+    <string name="appid_weather">be8d3e323de722ff78208a7dbb2dcd6f</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="GPSAlertDialogMessage">Press \'Setting\' to enable GPS</string>
+    <string name="GPSAlertDialogTitle">Setting GPS</string>
+    <string name="check_internet">Check your internet connection!</string>
+</resources>
