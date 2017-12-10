@@ -16,23 +16,25 @@
             android:orientation="vertical"
             android:weightSum="12"
             >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_gravity="top"
-                android:orientation="vertical"
-                android:layout_weight="1.5">
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/tvCurLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:textColor="#ffffff"
                     android:layout_gravity="center"
-                    />
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/text_size_title_address"
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -71,7 +73,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:textSize="40sp"
+                            android:textSize="@dimen/text_size_big_temp"
                             android:textStyle="bold"
                             />
                         <TextView
@@ -80,7 +82,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:textSize="25sp"
+                            android:textSize="@dimen/text_size_small_temp"
                             />
                         <TextView
                             android:layout_marginTop="5dp"
@@ -88,7 +90,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:textSize="25sp"
+                            android:textSize="@dimen/text_size_small_temp"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -128,7 +130,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="Wind: "
+                            android:text="@string/txt_wind"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
@@ -148,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="Press: "
+                            android:text="@string/txt_pressure"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -177,7 +179,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="Hum: "
+                            android:text="@string/txt_humidity"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
@@ -197,7 +199,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="State: "
+                            android:text="@string/txt_state"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -226,7 +228,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="Sunrise: "
+                            android:text="@string/txt_sunrise"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
@@ -246,7 +248,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
-                            android:text="Sunset: "
+                            android:text="@string/txt_sunset"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -263,20 +265,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5">
+                <!--<Button-->
+                    <!--android:id="@+id/btnDetail"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:text="Details"-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--android:background="@drawable/buttonshape"-->
+                    <!--android:shadowColor="#A8A8A8"-->
+                    <!--android:shadowDx="4"-->
+                    <!--android:shadowDy="4"-->
+                    <!--android:shadowRadius="5"-->
+                    <!--android:minHeight="35dp"-->
+                    <!--/>-->
                 <Button
                     android:id="@+id/btnDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Details"
-                    android:textSize="16sp"
-                    android:textAllCaps="false"
-                    android:background="@drawable/buttonshape"
-                    android:shadowColor="#A8A8A8"
-                    android:shadowDx="4"
-                    android:shadowDy="4"
-                    android:shadowRadius="5"
-                    android:minHeight="35dp"
+                    android:text="@string/btn_detail"
+                    style="@style/button"
                     />
             </LinearLayout>
         </LinearLayout>
