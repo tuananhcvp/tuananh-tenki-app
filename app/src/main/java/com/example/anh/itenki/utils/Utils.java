@@ -83,8 +83,6 @@ public class Utils {
 
         Typeface fontType = Typeface.createFromAsset(context.getAssets(), "fonts/Pacifico.ttf");
         txtTitle.setTypeface(fontType);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(txtTitle);
     }

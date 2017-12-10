@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.anh.itenki.R;
+import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
@@ -47,7 +48,7 @@ public class CurrentLocationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setActionbarTitle("Current Location", getActivity(), getActivity().getActionBar());
+        ((MainActivity) getActivity()).setActionBarName("Current Location");
     }
 
     @Override

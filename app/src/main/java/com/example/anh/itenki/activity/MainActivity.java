@@ -34,6 +34,7 @@ import com.example.anh.itenki.fragment.CurrentLocationFragment;
 import com.example.anh.itenki.fragment.SelectLocationFragment;
 import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
+import com.example.anh.itenki.utils.Utils;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -324,6 +325,10 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setActionBarName(String title) {
+        Utils.setActionbarTitle("Current Location", this, getSupportActionBar());
     }
 
     public void getCityData() {
