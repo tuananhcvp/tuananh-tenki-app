@@ -39,8 +39,11 @@ public class CurrentLocationFragment extends Fragment {
     private SwipeRefreshLayout swipeCurrent;
     private String curLocation = "";
 
-    public CurrentLocationFragment() {
-
+    public static CurrentLocationFragment newInstance() {
+        Bundle args = new Bundle();
+        CurrentLocationFragment fragment = new CurrentLocationFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

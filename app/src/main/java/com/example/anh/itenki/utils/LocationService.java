@@ -60,6 +60,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             stopSelf();
         }
         Log.d("LocationService.class","connect GoogleApiClient Service ok");
+        if (SplashScreenActivity.progressDialog!=null) {
+            SplashScreenActivity.progressDialog.dismiss();
+        }
 
     }
 
@@ -124,6 +127,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.e("mGoogleApiClient","==> Disconnect");
         mGoogleApiClient.disconnect();
         Log.d("LocationService.class","service onDestroy");
+        if (SplashScreenActivity.progressDialog!=null) {
+            SplashScreenActivity.progressDialog.dismiss();
+        }
     }
 
     @Override

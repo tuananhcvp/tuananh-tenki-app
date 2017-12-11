@@ -39,6 +39,7 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
     private String selectedLocation;
     private TextView txtCurAddress;
     private SwipeRefreshLayout swipeSelected;
+    private boolean isDataEmpty = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,14 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
                     Toasty.info(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
                     return;
                 } else {
-//                    Intent detailIntent = new Intent(SelectedLocationWeatherActivity.this, ForecastDetailActivity.class);
-//                    detailIntent.putExtra("SelectedAddress", selectedLocation);
-//                    startActivity(detailIntent);
+                    if (!isDataEmpty) {
+                        Intent detailIntent = new Intent(SelectedLocationWeatherActivity.this, ForecastDetailActivity.class);
+                        detailIntent.putExtra("SelectedAddress", selectedLocation);
+                        startActivity(detailIntent);
+                    } else {
+                        swipeSelected.setRefreshing(false);
+                        Toasty.info(getApplicationContext(), getString(R.string.check_data_not_found), Toast.LENGTH_SHORT, true).show();
+                    }
                 }
 
             }
@@ -77,7 +83,12 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
                     Toasty.info(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
                     swipeSelected.setRefreshing(false);
                 } else {
-                    loadCurrentWeatherByCityName(selectedLocation);
+                    if (!isDataEmpty) {
+                        loadCurrentWeatherByCityName(selectedLocation);
+                    } else {
+                        swipeSelected.setRefreshing(false);
+                        Toasty.info(getApplicationContext(), getString(R.string.check_data_not_found), Toast.LENGTH_SHORT, true).show();
+                    }
                 }
             }
         });
@@ -107,9 +118,11 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
                     Log.d("openWeatherJSon","==> "+new Gson().toJson(openWeatherJSon));
                     Utils.loadCurrentWeather(SelectedLocationWeatherActivity.this, openWeatherJSon);
                     swipeSelected.setRefreshing(false);
+                    isDataEmpty = false;
                 } catch (JSONException e) {
                     e.printStackTrace();
                     swipeSelected.setRefreshing(false);
+                    isDataEmpty = true;
                     Toasty.info(getApplicationContext(), getString(R.string.check_data_not_found), Toast.LENGTH_SHORT, true).show();
                 }
             }
@@ -119,6 +132,7 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
                 Log.d("Response","==> Fail");
                 t.printStackTrace();
                 swipeSelected.setRefreshing(false);
+                isDataEmpty = true;
             }
         });
     }

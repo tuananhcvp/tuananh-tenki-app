@@ -63,14 +63,14 @@ public class ForecastDetailActivity extends AppCompatActivity {
 
         if (selectedAddr != null) {
             txtSelectedAddr.setText(selectedAddr);
+            swipeDetail.setRefreshing(true);
+            loadForecastDetail(TYPE_DAILY_NAME);
 
         } else if (curLocation != null) {
             txtSelectedAddr.setText(curLocation);
             swipeDetail.setRefreshing(true);
             loadForecastDetail(TYPE_DAILY_LOCATION);
         }
-
-
     }
 
     @Override
@@ -85,15 +85,69 @@ public class ForecastDetailActivity extends AppCompatActivity {
     }
 
     public void loadForecastDetail(int type) {
+        WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
+
         switch (type) {
             case TYPE_DAILY_NAME:
+                Call<OpenWeatherDailyJSon> callDailyName = infoAPI.loadDailyWeatherByName(selectedAddr, getString(R.string.appid_weather));
+                Call<OpenWeatherNextDaysJSon> callNextDayName = infoAPI.loadNextDayWeatherByName(selectedAddr, getString(R.string.appid_weather));
+
+                callDailyName.enqueue(new Callback<OpenWeatherDailyJSon>() {
+                    @Override
+                    public void onResponse(Call<OpenWeatherDailyJSon> call, Response<OpenWeatherDailyJSon> response) {
+                        Log.e("DAILY WEATHER", "==> " + new Gson().toJson(response.body()));
+                        swipeDetail.setRefreshing(false);
+
+                        for (int i = 0;i < 8;i++) {
+                            String temp = format.format(response.body().getList().get(i).getMain().getTemp()-273.15)+"°C";
+                            arrDailyTemp[i] = temp;
+                            urlDailyIcon[i] = response.body().getList().get(i).getWeather().get(0).getIcon();
+                        }
+
+                        HorizontalListViewDailyAdapter dailyAdapter = new HorizontalListViewDailyAdapter(ForecastDetailActivity.this, arrDailyTime, arrDailyTemp, urlDailyIcon);
+                        lvDailyWeather.setAdapter(dailyAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<OpenWeatherDailyJSon> call, Throwable t) {
+                        Log.e("DAILY WEATHER", "==> Call Daily Fail");
+                        t.printStackTrace();
+                        swipeDetail.setRefreshing(false);
+                    }
+                });
+
+                callNextDayName.enqueue(new Callback<OpenWeatherNextDaysJSon>() {
+                    @Override
+                    public void onResponse(Call<OpenWeatherNextDaysJSon> call, Response<OpenWeatherNextDaysJSon> response) {
+                        Log.e("NEXTDAY WEATHER", "==> " + new Gson().toJson(response.body()));
+                        swipeDetail.setRefreshing(false);
+
+                        for (int i = 0;i < 5;i++) {
+                            String tempMax = format.format(response.body().getList().get(i).getTemp().getMax()-273.15) + "°C";
+                            String tempMin = format.format(response.body().getList().get(i).getTemp().getMin()-273.15) + "°C";
+                            arrNextDaysTemp[i] = tempMax + "/" + tempMin;
+                            urlNextDaysIcon[i] = response.body().getList().get(i).getWeather().get(0).getIcon();
+                        }
+
+                        NextDaysWeatherAdapter nextDaysAdapter = new NextDaysWeatherAdapter(ForecastDetailActivity.this, arrNextDays, arrNextDaysDate, urlNextDaysIcon, arrNextDaysTemp     );
+                        lvNextDayWeather.setAdapter(nextDaysAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<OpenWeatherNextDaysJSon> call, Throwable t) {
+                        Log.e("NEXTDAY WEATHER", "==> Call NextDay Fail");
+                        swipeDetail.setRefreshing(false);
+                    }
+                });
+
+                swipeDetail.setEnabled(false);
+
                 break;
             case TYPE_DAILY_LOCATION:
-                WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
-                Call<OpenWeatherDailyJSon> callDaily = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
-                Call<OpenWeatherNextDaysJSon> callNextDay = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
+                Call<OpenWeatherDailyJSon> callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
+                Call<OpenWeatherNextDaysJSon> callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
 
-                callDaily.enqueue(new Callback<OpenWeatherDailyJSon>() {
+                callDailyLocation.enqueue(new Callback<OpenWeatherDailyJSon>() {
                     @Override
                     public void onResponse(Call<OpenWeatherDailyJSon> call, Response<OpenWeatherDailyJSon> response) {
                         Log.e("DAILY WEATHER", "==> " + new Gson().toJson(response.body()));
@@ -118,7 +172,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     }
                 });
 
-                callNextDay.enqueue(new Callback<OpenWeatherNextDaysJSon>() {
+                callNextDayLocation.enqueue(new Callback<OpenWeatherNextDaysJSon>() {
                     @Override
                     public void onResponse(Call<OpenWeatherNextDaysJSon> call, Response<OpenWeatherNextDaysJSon> response) {
                         Log.e("NEXTDAY WEATHER", "==> " + new Gson().toJson(response.body()));
@@ -142,6 +196,8 @@ public class ForecastDetailActivity extends AppCompatActivity {
 
                     }
                 });
+
+                swipeDetail.setEnabled(false);
 
                 break;
             default:

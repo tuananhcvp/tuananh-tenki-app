@@ -1,5 +1,6 @@
 package com.example.anh.itenki.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private int _splashTime = 2500;
     private ImageView imgSplash;
     public static double latitude, longitude;
+    public static ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

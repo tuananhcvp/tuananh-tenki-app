@@ -5,31 +5,31 @@
         <item
             android:id="@+id/nav_currentLocation"
             android:icon="@drawable/ic_my_location_black_24dp"
-            android:title="Current location" />
+            android:title="@string/title_current_location" />
         <item
             android:id="@+id/nav_selectLocation"
             android:icon="@drawable/ic_location_city_black_24dp"
-            android:title="Select location" />
+            android:title="@string/title_select_location" />
         <item
             android:id="@+id/nav_googleMap"
             android:icon="@drawable/ic_location_on_black_24dp"
-            android:title="Google Map" />
+            android:title="@string/title_google_map" />
+        <item
+            android:id="@+id/nav_note"
+            android:icon="@drawable/ic_note_black_24dp"
+            android:title="@string/title_tenki_note" />
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_manage"
             android:title="Setting" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/title_introduction">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_info"
+                android:title="@string/title_about" />
         </menu>
     </item>
 

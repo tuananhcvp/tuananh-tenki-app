@@ -32,8 +32,11 @@ public class SelectLocationFragment extends Fragment {
     private ArrayAdapter<String> adapterCity = null;
     private View mainView;
 
-    public SelectLocationFragment(){
-
+    public static SelectLocationFragment newInstance() {
+        Bundle args = new Bundle();
+        SelectLocationFragment fragment = new SelectLocationFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.example.anh.itenki.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +20,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -73,6 +78,10 @@ public class MainActivity extends AppCompatActivity
         getCityData();
         initGPS();
 
+        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
+            callFragment(CurrentLocationFragment.newInstance());
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +115,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -134,18 +143,18 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_currentLocation) {
             Log.d("Location","==> Lat:"+SplashScreenActivity.latitude+" -- Lon:"+SplashScreenActivity.longitude);
 
-            callFragment(new CurrentLocationFragment());
+            callFragment(CurrentLocationFragment.newInstance());
 
         } else if (id == R.id.nav_selectLocation) {
-            callFragment(new SelectLocationFragment());
+            callFragment(SelectLocationFragment.newInstance());
 
         } else if (id == R.id.nav_googleMap) {
 
+        } else if (id == R.id.nav_note) {
+
         } else if (id == R.id.nav_setting) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
 
         }
 
@@ -186,7 +195,6 @@ public class MainActivity extends AppCompatActivity
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location
                         // requests here.
-                        Log.d("OnCLickOK",": => ok");
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied. But could be fixed by showing the user
@@ -244,6 +252,7 @@ public class MainActivity extends AppCompatActivity
         if(requestCode==REQUEST_CHECK_SETTINGS) {
             SharedPreference.getInstance(this).putBoolean("isPermisionLocation",true);
             if(resultCode == RESULT_OK) {
+                initProgressDialog(this);
                 if(LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();
@@ -255,6 +264,13 @@ public class MainActivity extends AppCompatActivity
                         initService();
                     }
                 }, 3000);  //Do something after 3000ms
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        callFragment(CurrentLocationFragment.newInstance());
+                    }
+                }, 4000);
 
             }
         }
@@ -373,5 +389,16 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         return json;
+    }
+
+    public void initProgressDialog(Activity context) {
+        SplashScreenActivity.progressDialog = new ProgressDialog(context);
+        SplashScreenActivity.progressDialog.setProgressStyle(android.R.style.Theme_Translucent_NoTitleBar);
+//        dialog.setTitle(ssTitle);
+        SplashScreenActivity.progressDialog.setMessage(getResources().getString(R.string.dialog_data_loading));
+        SplashScreenActivity.progressDialog.setCanceledOnTouchOutside(false);
+        SplashScreenActivity.progressDialog.setCancelable(false);
+        SplashScreenActivity.progressDialog.setIndeterminate(true);
+        SplashScreenActivity.progressDialog.show();
     }
 }
