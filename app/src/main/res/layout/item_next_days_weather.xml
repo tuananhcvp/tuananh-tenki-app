@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp">
+    <TextView
+        android:id="@+id/detailDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="23sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentLeft="true"
+        android:text="Monday"/>
+    <TextView
+        android:id="@+id/detailDayMonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/detailDay"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="2dp"
+        android:text="2016/05/10"/>
+    <TextView
+        android:id="@+id/dtMinMaxTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:textSize="18sp"
+        android:layout_centerVertical="true"
+        android:textColor="#ffffff"
+        android:text="32ºC/25ºC"/>
+    <ImageView
+        android:id="@+id/dtImgViewSky"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/dtMinMaxTemp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/cloudy"/>
+
+</RelativeLayout>

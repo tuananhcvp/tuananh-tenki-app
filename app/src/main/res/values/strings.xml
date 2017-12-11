@@ -19,5 +19,7 @@
     <string name="txt_state">State: </string>
     <string name="txt_sunrise">Sunrise: </string>
     <string name="txt_sunset">Sunset: </string>
+    <string name="title_forecast_detail">Forecast Detail</string>
+    <string name="title_current_location">Current Location</string>
 
 </resources>

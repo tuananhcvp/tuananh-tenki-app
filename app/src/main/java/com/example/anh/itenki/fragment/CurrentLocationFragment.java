@@ -1,5 +1,6 @@
 package com.example.anh.itenki.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.anh.itenki.R;
+import com.example.anh.itenki.activity.ForecastDetailActivity;
 import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.ApiClient;
@@ -35,6 +37,7 @@ import retrofit2.Response;
 public class CurrentLocationFragment extends Fragment {
     private Button btnDetail;
     private SwipeRefreshLayout swipeCurrent;
+    private String curLocation = "";
 
     public CurrentLocationFragment() {
 
@@ -81,7 +84,20 @@ public class CurrentLocationFragment extends Fragment {
         btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!Utils.isNetworkConnected(getActivity())) {
+                    Toasty.info(getContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
+                } else {
+                    if (!curLocation.equalsIgnoreCase("")) {
+                        Intent detailIntent = new Intent(getActivity(), ForecastDetailActivity.class);
+                        detailIntent.putExtra("CurrentLatitude", SplashScreenActivity.latitude);
+                        detailIntent.putExtra("CurrentLongitude", SplashScreenActivity.longitude);
+                        detailIntent.putExtra("CurrentAddressName", curLocation);
+                        startActivity(detailIntent);
+                    } else {
+                        Toasty.info(getContext(), getString(R.string.check_data_not_found), Toast.LENGTH_SHORT, true).show();
+                    }
 
+                }
             }
         });
     }
@@ -107,6 +123,7 @@ public class CurrentLocationFragment extends Fragment {
                     Log.d("Response","==> "+weatherJSon);
                     OpenWeatherJSon openWeatherJSon = new Gson().fromJson(weatherJSon, new TypeToken<OpenWeatherJSon>(){}.getType());
                     Log.d("openWeatherJSon","==> "+new Gson().toJson(openWeatherJSon));
+                    curLocation = openWeatherJSon.getName();
                     Utils.loadCurrentWeather(getActivity(), openWeatherJSon);
                     swipeCurrent.setRefreshing(false);
                 } catch (JSONException e) {

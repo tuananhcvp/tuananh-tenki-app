@@ -21,8 +21,9 @@
             android:padding="5dp"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:textSize="23sp"
-            android:text="Address"/>
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_title_address"
+            />
 
         <View
             android:layout_width="match_parent"
