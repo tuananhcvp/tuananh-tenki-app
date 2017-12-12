@@ -54,7 +54,7 @@ public class CurrentLocationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity) getActivity()).setActionBarName("Current Location");
+        ((MainActivity) getActivity()).setActionBarName(getResources().getString(R.string.title_current_location));
     }
 
     @Override

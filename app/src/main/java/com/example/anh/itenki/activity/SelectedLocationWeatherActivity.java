@@ -44,6 +44,7 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setActionbarTitle(getResources().getString(R.string.title_selected_city), this, getSupportActionBar());
         setContentView(R.layout.fragment_current_location);
 
         swipeSelected = (SwipeRefreshLayout)findViewById(R.id.swipeCurrent);

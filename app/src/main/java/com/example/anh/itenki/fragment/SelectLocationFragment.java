@@ -47,7 +47,7 @@ public class SelectLocationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((MainActivity) getActivity()).setActionBarName(getResources().getString(R.string.title_select_location));
     }
 
     @Override
@@ -95,12 +95,11 @@ public class SelectLocationFragment extends Fragment {
         btnSeeWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (actvAddress.getText().toString().equals("")){
+                if (actvAddress.getText().toString().equals("")) {
 //                    Toast.makeText(getActivity(), "Please input an address!", Toast.LENGTH_SHORT).show();
                     Toasty.error(getActivity(), "Please input an address!", Toast.LENGTH_SHORT, true).show();
                     return;
-                }
-                else {
+                } else {
                     Intent mIntent = new Intent(getActivity(), SelectedLocationWeatherActivity.class);
                     mIntent.putExtra("SelectedAddress", actvAddress.getText().toString());
                     startActivity(mIntent);

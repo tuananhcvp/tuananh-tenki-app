@@ -14,48 +14,55 @@
         android:background="@drawable/pts_blur_4_1"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/txtSelectedAddr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textColor="#ffffff"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_size_title_address"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#ffffff"
-            android:layout_marginTop="5dp"
-            />
-
-        <com.sileria.android.view.HorzListView
-            android:id="@+id/lvDailyWeather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="#ffffff"
-            android:layout_marginTop="5dp"/>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <ListView
-                android:id="@+id/lvNextDayWeather"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#50000000">
+            <TextView
+                android:id="@+id/txtSelectedAddr"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_title_address"
+                />
 
-            </ListView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffffff"
+                android:layout_marginTop="5dp"
+                />
+
+            <com.sileria.android.view.HorzListView
+                android:id="@+id/lvDailyWeather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#ffffff"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+                <ListView
+                    android:id="@+id/lvNextDayWeather"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ListView>
+
+            </LinearLayout>
 
         </LinearLayout>
+        </LinearLayout>
 
-    </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

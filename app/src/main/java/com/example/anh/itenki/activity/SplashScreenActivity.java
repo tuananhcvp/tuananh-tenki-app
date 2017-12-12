@@ -20,7 +20,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     private int _splashTime = 2500;
     private ImageView imgSplash;
     public static double latitude, longitude;
-    public static ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

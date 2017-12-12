@@ -23,8 +23,6 @@ public class NextDaysWeatherAdapter extends BaseAdapter {
     private String[] arrDate;
     private String[] arrTemp;
 
-    private final String BASE_ICON_URL = "http://openweathermap.org/img/w/";
-
     public NextDaysWeatherAdapter(Activity context, String[] arrDay, String[] arrDate, String[] arrIcon, String[] arrTemp){
         this.context = context;
         this.arrDay = arrDay;
@@ -62,7 +60,7 @@ public class NextDaysWeatherAdapter extends BaseAdapter {
         detailDay.setText(arrDay[i]);
         detailDayMont.setText(arrDate[i]);
         dtMinMaxTemp.setText(arrTemp[i]);
-        Glide.with(context).load(BASE_ICON_URL+arrIcon[i]+".png").into(dtImgViewSky);
+        Glide.with(context).load(context.getString(R.string.base_icon_url)+arrIcon[i]+".png").into(dtImgViewSky);
 
         return convertView;
     }

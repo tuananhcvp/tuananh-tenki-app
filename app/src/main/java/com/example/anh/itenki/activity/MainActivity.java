@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -68,19 +70,21 @@ public class MainActivity extends AppCompatActivity
     public static String[] country;
     public static String[] cityArr;
 
+    private NavigationView navigationView;
+    private ProgressDialog dialog;
+    public static Point screenSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        dialog = new ProgressDialog(this);
 
+        getScreenSize();
         getCityData();
         initGPS();
-
-        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
-            callFragment(CurrentLocationFragment.newInstance());
-        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +101,13 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
+            callFragment(CurrentLocationFragment.newInstance());
+        }
 
     }
 
@@ -142,19 +151,36 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_currentLocation) {
             Log.d("Location","==> Lat:"+SplashScreenActivity.latitude+" -- Lon:"+SplashScreenActivity.longitude);
+            navigationView.getMenu().getItem(0).setChecked(true);
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
             callFragment(CurrentLocationFragment.newInstance());
 
         } else if (id == R.id.nav_selectLocation) {
+            navigationView.getMenu().getItem(1).setChecked(true);
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
+
             callFragment(SelectLocationFragment.newInstance());
 
         } else if (id == R.id.nav_googleMap) {
+            Intent mapIntent = new Intent(this, WeatherMapsActivity.class);
+            startActivity(mapIntent);
 
         } else if (id == R.id.nav_note) {
+            navigationView.getMenu().getItem(3).setChecked(true);
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
         } else if (id == R.id.nav_setting) {
+            navigationView.getMenu().getItem(4).setChecked(true);
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
         } else if (id == R.id.nav_about) {
+            navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(true);
+            navigationView.getMenu().getItem(0).setChecked(false);
+            navigationView.getMenu().getItem(1).setChecked(false);
+            navigationView.getMenu().getItem(2).setChecked(false);
+            navigationView.getMenu().getItem(3).setChecked(false);
+            navigationView.getMenu().getItem(4).setChecked(false);
 
         }
 
@@ -252,7 +278,9 @@ public class MainActivity extends AppCompatActivity
         if(requestCode==REQUEST_CHECK_SETTINGS) {
             SharedPreference.getInstance(this).putBoolean("isPermisionLocation",true);
             if(resultCode == RESULT_OK) {
-                initProgressDialog(this);
+                Utils.initProgressDialog(MainActivity.this, dialog);
+                dialog.show();
+
                 if(LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();
@@ -268,9 +296,10 @@ public class MainActivity extends AppCompatActivity
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        dialog.dismiss();
                         callFragment(CurrentLocationFragment.newInstance());
                     }
-                }, 4000);
+                }, 4500);
 
             }
         }
@@ -344,7 +373,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setActionBarName(String title) {
-        Utils.setActionbarTitle("Current Location", this, getSupportActionBar());
+        Utils.setActionbarTitle(title, this, getSupportActionBar());
     }
 
     public void getCityData() {
@@ -391,14 +420,11 @@ public class MainActivity extends AppCompatActivity
         return json;
     }
 
-    public void initProgressDialog(Activity context) {
-        SplashScreenActivity.progressDialog = new ProgressDialog(context);
-        SplashScreenActivity.progressDialog.setProgressStyle(android.R.style.Theme_Translucent_NoTitleBar);
-//        dialog.setTitle(ssTitle);
-        SplashScreenActivity.progressDialog.setMessage(getResources().getString(R.string.dialog_data_loading));
-        SplashScreenActivity.progressDialog.setCanceledOnTouchOutside(false);
-        SplashScreenActivity.progressDialog.setCancelable(false);
-        SplashScreenActivity.progressDialog.setIndeterminate(true);
-        SplashScreenActivity.progressDialog.show();
+    private void getScreenSize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenSize = size;
     }
+
 }

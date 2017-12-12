@@ -46,12 +46,12 @@ public class SharedPreference {
         doCommit();
     }
 
-    private void doEdit(){
+    private void doEdit() {
         if(!mAppEdit && mEditor == null) {
             mEditor = mPref.edit();
         }
     }
-    private void doCommit(){
+    private void doCommit() {
         if(!mAppEdit && mEditor!=null) {
             mEditor.commit();
             mEditor = null;
@@ -67,9 +67,9 @@ public class SharedPreference {
     public Boolean getBoolean(String key, boolean defaultValue) {
         if(mPref!=null) {
             return mPref.getBoolean(key, defaultValue);
-        }
-        else
+        } else {
             return defaultValue;
+        }
     }
     //Int
     public void putInt(String key, int value) {
@@ -81,10 +81,11 @@ public class SharedPreference {
     public int getInt(String key, int defaultValue) {
         if(mPref!=null) {
             return mPref.getInt(key, defaultValue);
-        }
-        else
+        } else {
             return defaultValue;
+        }
     }
+
     //String
     public void putString(String key, String value) {
         doEdit();
@@ -94,9 +95,9 @@ public class SharedPreference {
     public String getString(String key, String defaultValue) {
         if(mPref!=null) {
             return mPref.getString(key, defaultValue);
-        }
-        else
+        } else {
             return defaultValue;
+        }
     }
     //Float
     public void putFloat(String key, float value) {
@@ -108,9 +109,9 @@ public class SharedPreference {
     public float getFloat(String key, float defaultValue) {
         if(mPref!=null) {
             return mPref.getFloat(key, defaultValue);
-        }
-        else
+        } else {
             return defaultValue;
+        }
     }
 }
 

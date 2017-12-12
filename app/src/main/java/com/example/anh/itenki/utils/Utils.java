@@ -1,6 +1,7 @@
 package com.example.anh.itenki.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.anh.itenki.R;
+import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
 
 import java.text.DecimalFormat;
@@ -42,7 +44,7 @@ public class Utils {
 
         String curLocation = weatherJSon.getName().toString();
         String temp = format.format(weatherJSon.getMain().getTemp()-273.15)+"°C";
-        String urlIconSky = "http://openweathermap.org/img/w/"+weatherJSon.getWeather().get(0).getIcon()+".png";
+        String urlIconSky = activity.getString(R.string.base_icon_url)+weatherJSon.getWeather().get(0).getIcon()+".png";
         String stateMain = weatherJSon.getWeather().get(0).getMain().toString();
         String maxMinTemp = format.format(weatherJSon.getMain().getTemp_max()-273.15)+"°C/"+format.format(weatherJSon.getMain().getTemp_min()-273.15)+"°C";
         String wind = weatherJSon.getWind().getSpeed()+"m/s";
@@ -85,6 +87,15 @@ public class Utils {
         txtTitle.setTypeface(fontType);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(txtTitle);
+    }
+
+    public static void initProgressDialog(Activity context, ProgressDialog dialog) {
+        dialog.setProgressStyle(android.R.style.Theme_Translucent_NoTitleBar);
+//        dialog.setTitle(ssTitle);
+        dialog.setMessage(context.getString(R.string.dialog_data_loading));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.setIndeterminate(true);
     }
 }
 

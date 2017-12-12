@@ -23,8 +23,6 @@ public class HorizontalListViewDailyAdapter extends BaseAdapter {
     private String[] arrTemp;
     private String[] arrIcon;
 
-    private final String BASE_ICON_URL = "http://openweathermap.org/img/w/";
-
     public HorizontalListViewDailyAdapter(Activity context, String[] arrTime, String[] arrTemp, String[] arrIcon) {
         this.context = context;
         this.arrTime = arrTime;
@@ -59,7 +57,7 @@ public class HorizontalListViewDailyAdapter extends BaseAdapter {
 
         txtDailyTime.setText(arrTime[i]);
         txtDailyTemp.setText(arrTemp[i]);
-        Glide.with(context).load(BASE_ICON_URL+arrIcon[i]+".png").into(imgDailySky);
+        Glide.with(context).load(context.getString(R.string.base_icon_url)+arrIcon[i]+".png").into(imgDailySky);
 
         return convertView;
     }

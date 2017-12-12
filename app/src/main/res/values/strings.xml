@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ITenki</string>
     <string name="appid_weather">ad470c82b413cb03c8a38a020b76561e</string>
+    <string name="base_icon_url">http://openweathermap.org/img/w/</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,14 +20,20 @@
     <string name="txt_state">State: </string>
     <string name="txt_sunrise">Sunrise: </string>
     <string name="txt_sunset">Sunset: </string>
+    <string name="txt_morning">Morning: </string>
+    <string name="txt_evening">Evening: </string>
+    <string name="txt_night">Night: </string>
+
     <string name="title_forecast_detail">Forecast Detail</string>
     <string name="title_current_location">Current Location</string>
     <string name="title_select_location">Select City Name</string>
+    <string name="title_selected_city">Selected City</string>
     <string name="title_google_map">Google Map</string>
     <string name="title_setting">Setting</string>
     <string name="title_tenki_note">Tenki Note</string>
     <string name="title_introduction">Introduction</string>
     <string name="title_about">About</string>
     <string name="dialog_data_loading">Data is loading...</string>
+    <string name="title_activity_weather_maps">Map</string>
 
 </resources>

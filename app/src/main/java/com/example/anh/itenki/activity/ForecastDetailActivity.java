@@ -1,14 +1,21 @@
 package com.example.anh.itenki.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.anh.itenki.adapter.HorizontalListViewDailyAdapter;
 import com.example.anh.itenki.adapter.NextDaysWeatherAdapter;
 import com.example.anh.itenki.model.ApiClient;
@@ -96,7 +103,6 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<OpenWeatherDailyJSon> call, Response<OpenWeatherDailyJSon> response) {
                         Log.e("DAILY WEATHER", "==> " + new Gson().toJson(response.body()));
-                        swipeDetail.setRefreshing(false);
 
                         for (int i = 0;i < 8;i++) {
                             String temp = format.format(response.body().getList().get(i).getMain().getTemp()-273.15)+"°C";
@@ -112,7 +118,6 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     public void onFailure(Call<OpenWeatherDailyJSon> call, Throwable t) {
                         Log.e("DAILY WEATHER", "==> Call Daily Fail");
                         t.printStackTrace();
-                        swipeDetail.setRefreshing(false);
                     }
                 });
 
@@ -121,6 +126,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     public void onResponse(Call<OpenWeatherNextDaysJSon> call, Response<OpenWeatherNextDaysJSon> response) {
                         Log.e("NEXTDAY WEATHER", "==> " + new Gson().toJson(response.body()));
                         swipeDetail.setRefreshing(false);
+                        swipeDetail.setEnabled(false);
 
                         for (int i = 0;i < 5;i++) {
                             String tempMax = format.format(response.body().getList().get(i).getTemp().getMax()-273.15) + "°C";
@@ -131,16 +137,24 @@ public class ForecastDetailActivity extends AppCompatActivity {
 
                         NextDaysWeatherAdapter nextDaysAdapter = new NextDaysWeatherAdapter(ForecastDetailActivity.this, arrNextDays, arrNextDaysDate, urlNextDaysIcon, arrNextDaysTemp     );
                         lvNextDayWeather.setAdapter(nextDaysAdapter);
+
+                        final OpenWeatherNextDaysJSon weather = response.body();
+                        lvNextDayWeather.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                String date = arrNextDays[position]+"<"+arrNextDaysDate[position]+">";
+                                showDailyWeatherDialog(weather, date, position);
+                            }
+                        });
                     }
 
                     @Override
                     public void onFailure(Call<OpenWeatherNextDaysJSon> call, Throwable t) {
                         Log.e("NEXTDAY WEATHER", "==> Call NextDay Fail");
                         swipeDetail.setRefreshing(false);
+                        swipeDetail.setEnabled(false);
                     }
                 });
-
-                swipeDetail.setEnabled(false);
 
                 break;
             case TYPE_DAILY_LOCATION:
@@ -151,7 +165,6 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<OpenWeatherDailyJSon> call, Response<OpenWeatherDailyJSon> response) {
                         Log.e("DAILY WEATHER", "==> " + new Gson().toJson(response.body()));
-                        swipeDetail.setRefreshing(false);
 
                         for (int i = 0;i < 8;i++) {
                             String temp = format.format(response.body().getList().get(i).getMain().getTemp()-273.15)+"°C";
@@ -168,7 +181,6 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     public void onFailure(Call<OpenWeatherDailyJSon> call, Throwable t) {
                         Log.e("DAILY WEATHER", "==> Call Daily Fail");
                         t.printStackTrace();
-                        swipeDetail.setRefreshing(false);
                     }
                 });
 
@@ -177,27 +189,36 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     public void onResponse(Call<OpenWeatherNextDaysJSon> call, Response<OpenWeatherNextDaysJSon> response) {
                         Log.e("NEXTDAY WEATHER", "==> " + new Gson().toJson(response.body()));
                         swipeDetail.setRefreshing(false);
+                        swipeDetail.setEnabled(false);
 
                         for (int i = 0;i < 5;i++) {
-                            String tempMax = format.format(response.body().getList().get(i).getTemp().getMax()-273.15) + "°C";
-                            String tempMin = format.format(response.body().getList().get(i).getTemp().getMin()-273.15) + "°C";
+                            String tempMax = format.format(response.body().getList().get(i+1).getTemp().getMax()-273.15) + "°C";
+                            String tempMin = format.format(response.body().getList().get(i+1).getTemp().getMin()-273.15) + "°C";
                             arrNextDaysTemp[i] = tempMax + "/" + tempMin;
-                            urlNextDaysIcon[i] = response.body().getList().get(i).getWeather().get(0).getIcon();
+                            urlNextDaysIcon[i] = response.body().getList().get(i+1).getWeather().get(0).getIcon();
                         }
 
                         NextDaysWeatherAdapter nextDaysAdapter = new NextDaysWeatherAdapter(ForecastDetailActivity.this, arrNextDays, arrNextDaysDate, urlNextDaysIcon, arrNextDaysTemp     );
                         lvNextDayWeather.setAdapter(nextDaysAdapter);
+
+                        final OpenWeatherNextDaysJSon weather = response.body();
+                        lvNextDayWeather.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                String date = arrNextDays[position]+"<"+arrNextDaysDate[position]+">";
+                                showDailyWeatherDialog(weather, date, position);
+                            }
+                        });
                     }
 
                     @Override
                     public void onFailure(Call<OpenWeatherNextDaysJSon> call, Throwable t) {
                         Log.e("NEXTDAY WEATHER", "==> Call NextDay Fail");
                         swipeDetail.setRefreshing(false);
+                        swipeDetail.setEnabled(false);
 
                     }
                 });
-
-                swipeDetail.setEnabled(false);
 
                 break;
             default:
@@ -269,6 +290,62 @@ public class ForecastDetailActivity extends AppCompatActivity {
             Date days = calendar.getTime();
             arrNextDaysDate[i - 1] = dateFormat.format(days).toString();
         }
+    }
+
+    public void showDailyWeatherDialog(OpenWeatherNextDaysJSon nextDaysJSon, String date, int i) {
+        View v = this.getLayoutInflater().inflate(R.layout.next_days_weather_info, null);
+
+        TextView tvDate = v.findViewById(R.id.tvDate);
+        ImageView imgIconState = v.findViewById(R.id.imgIconState);
+        TextView tvTemp = v.findViewById(R.id.tvTemp);
+        TextView tvState = v.findViewById(R.id.tvState);
+        TextView tvMaxMinTemp = v.findViewById(R.id.tvMaxMinTemp);
+        TextView tvMorTemp = v.findViewById(R.id.tvMorTemp);
+        TextView tvEveTemp = v.findViewById(R.id.tvEveTemp);
+        TextView tvNightTemp = v.findViewById(R.id.tvNightTemp);
+        TextView tvWind = v.findViewById(R.id.tvWind);
+        TextView tvHum = v.findViewById(R.id.tvHum);
+        TextView tvPress = v.findViewById(R.id.tvPress);
+
+        String tempDay = format.format(nextDaysJSon.getList().get(i+1).getTemp().getDay()-273.15)+"°C";
+        String state = nextDaysJSon.getList().get(i+1).getWeather().get(0).getDescription().toString();
+        String tempMax = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMax()-273.15)+"°C";
+        String tempMin = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMin()-273.15)+"°C";
+        String tempMorn = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMorn()-273.15)+"°C";
+        String tempEve = format.format(nextDaysJSon.getList().get(i+1).getTemp().getEve()-273.15)+"°C";
+        String tempNight = format.format(nextDaysJSon.getList().get(i+1).getTemp().getNight()-273.15)+"°C";
+        String wind = nextDaysJSon.getList().get(i+1).getSpeed()+"m/s";
+        String press = nextDaysJSon.getList().get(i+1).getPressure()+"hpa";
+        String hum = nextDaysJSon.getList().get(i+1).getHumidity()+"%";
+        String urlIcon = nextDaysJSon.getList().get(i+1).getWeather().get(0).getIcon();
+
+        tvDate.setText(date);
+        Glide.with(this).load(getString(R.string.base_icon_url)+urlIcon+".png").into(imgIconState);
+        tvTemp.setText(tempDay);
+        tvState.setText(state);
+        tvMaxMinTemp.setText(tempMax+"/"+tempMin);
+        tvMorTemp.setText(getResources().getString(R.string.txt_morning)+" "+ tempMorn);
+        tvEveTemp.setText(getResources().getString(R.string.txt_evening)+" "+tempEve);
+        tvNightTemp.setText(getResources().getString(R.string.txt_night)+" "+tempNight);
+        tvWind.setText(getResources().getString(R.string.txt_wind)+" "+wind);
+        tvHum.setText(getResources().getString(R.string.txt_humidity)+" "+hum);
+        tvPress.setText(getResources().getString(R.string.txt_pressure)+" "+press);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+        builder.setView(v);
+        builder.setCancelable(true);
+//        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.cancel();
+//            }
+//        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+//        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, 1000);
     }
 
 }
