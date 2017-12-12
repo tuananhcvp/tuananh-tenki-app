@@ -129,10 +129,10 @@ public class ForecastDetailActivity extends AppCompatActivity {
                         swipeDetail.setEnabled(false);
 
                         for (int i = 0;i < 5;i++) {
-                            String tempMax = format.format(response.body().getList().get(i).getTemp().getMax()-273.15) + "°C";
-                            String tempMin = format.format(response.body().getList().get(i).getTemp().getMin()-273.15) + "°C";
+                            String tempMax = format.format(response.body().getList().get(i+1).getTemp().getMax()-273.15) + "°C";
+                            String tempMin = format.format(response.body().getList().get(i+1).getTemp().getMin()-273.15) + "°C";
                             arrNextDaysTemp[i] = tempMax + "/" + tempMin;
-                            urlNextDaysIcon[i] = response.body().getList().get(i).getWeather().get(0).getIcon();
+                            urlNextDaysIcon[i] = response.body().getList().get(i+1).getWeather().get(0).getIcon();
                         }
 
                         NextDaysWeatherAdapter nextDaysAdapter = new NextDaysWeatherAdapter(ForecastDetailActivity.this, arrNextDays, arrNextDaysDate, urlNextDaysIcon, arrNextDaysTemp     );
