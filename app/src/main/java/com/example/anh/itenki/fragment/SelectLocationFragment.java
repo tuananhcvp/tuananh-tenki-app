@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.anh.itenki.R;
@@ -29,7 +30,10 @@ import es.dmoral.toasty.Toasty;
 public class SelectLocationFragment extends Fragment {
     private Button btnSeeWeather;
     private AutoCompleteTextView actvAddress;
+    private ListView lvJapanCity;
+
     private ArrayAdapter<String> adapterCity = null;
+    private ArrayAdapter<String> adapterJapanCity = null;
     private View mainView;
 
     public static SelectLocationFragment newInstance() {
@@ -54,6 +58,10 @@ public class SelectLocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_select_location, container, false);
 
+        actvAddress = (AutoCompleteTextView)mainView.findViewById(R.id.actvAddress);
+        btnSeeWeather = (Button)mainView.findViewById(R.id.btnSeeWeather);
+        lvJapanCity = (ListView)mainView.findViewById(R.id.lvJapanCity);
+
         return mainView;
     }
 
@@ -61,7 +69,6 @@ public class SelectLocationFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        actvAddress = (AutoCompleteTextView)getActivity().findViewById(R.id.actvAddress);
         adapterCity = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, MainActivity.cityArr);
         actvAddress.setAdapter(adapterCity);
 
@@ -91,12 +98,22 @@ public class SelectLocationFragment extends Fragment {
             }
         });
 
-        btnSeeWeather = (Button)getActivity().findViewById(R.id.btnSeeWeather);
+        adapterJapanCity = new ArrayAdapter<String>(getContext(), R.layout.simple_list_white_text, MainActivity.japanCityList);
+        lvJapanCity.setAdapter(adapterJapanCity);
+
+        lvJapanCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), SelectedLocationWeatherActivity.class);
+                intent.putExtra("SelectedAddress", MainActivity.japanCityList.get(position));
+                startActivity(intent);
+            }
+        });
+
         btnSeeWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (actvAddress.getText().toString().equals("")) {
-//                    Toast.makeText(getActivity(), "Please input an address!", Toast.LENGTH_SHORT).show();
                     Toasty.error(getActivity(), "Please input an address!", Toast.LENGTH_SHORT, true).show();
                     return;
                 } else {

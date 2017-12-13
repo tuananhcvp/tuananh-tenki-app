@@ -21,9 +21,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -52,6 +49,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +58,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     public BroadcastReceiver receiver=null;
     public static String[] country;
     public static String[] cityArr;
+    public static List<String> japanCityList;
 
     private NavigationView navigationView;
     private ProgressDialog dialog;
@@ -83,7 +84,8 @@ public class MainActivity extends AppCompatActivity
         dialog = new ProgressDialog(this);
 
         getScreenSize();
-        getCityData();
+        getAllCityData();
+        getJapanCityData();
         initGPS();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -376,10 +378,27 @@ public class MainActivity extends AppCompatActivity
         Utils.setActionbarTitle(title, this, getSupportActionBar());
     }
 
-    public void getCityData() {
+    public void getJapanCityData() {
+        japanCityList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(loadJSONFromAsset("japancity.json"));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = (JSONObject) jsonArray.get(i);
+                String str = (String) object.get("slug");
+                String city = str.substring(0, 1).toUpperCase() + str.substring(1);
+                japanCityList.add(city);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Collections.sort(japanCityList, String.CASE_INSENSITIVE_ORDER);
+        Log.e("JAPAN CITY", "==> "+new Gson().toJson(japanCityList));
+    }
+
+    public void getAllCityData() {
         ArrayList<String> city = new ArrayList<>();
         try {
-            JSONObject jsonRoot = new JSONObject(loadJSONFromAsset());
+            JSONObject jsonRoot = new JSONObject(loadJSONFromAsset("cities.json"));
             JSONArray listCountryArr = new JSONArray();
             listCountryArr = jsonRoot.names();
             country = new String[listCountryArr.length()];
@@ -401,13 +420,12 @@ public class MainActivity extends AppCompatActivity
         for (int j=0;j<city.size();j++) {
             cityArr[j] = city.get(j);
         }
-
     }
 
-    public String loadJSONFromAsset() {
+    public String loadJSONFromAsset(String file) {
         String json = null;
         try {
-            InputStream is = this.getAssets().open("cities.json");
+            InputStream is = this.getAssets().open(file);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

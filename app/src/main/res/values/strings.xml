@@ -26,7 +26,7 @@
 
     <string name="title_forecast_detail">Forecast Detail</string>
     <string name="title_current_location">Current Location</string>
-    <string name="title_select_location">Select City Name</string>
+    <string name="title_select_location">Select City</string>
     <string name="title_selected_city">Selected City</string>
     <string name="title_google_map">Google Map</string>
     <string name="title_setting">Setting</string>
@@ -35,5 +35,8 @@
     <string name="title_about">About</string>
     <string name="dialog_data_loading">Data is loading...</string>
     <string name="title_activity_weather_maps">Map</string>
+
+    <string name="txt_enter_address">Enter Address</string>
+    <string name="txt_select_exist_city">Select exist city</string>
 
 </resources>

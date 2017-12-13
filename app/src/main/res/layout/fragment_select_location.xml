@@ -11,10 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000080"
-        android:text="Enter Address:"
+        android:text="@string/txt_enter_address"
         android:layout_marginTop="10dp"
         android:textSize="24sp"
-        app:font="Playball.ttf"
         />
     <AutoCompleteTextView
         android:layout_marginTop="10dp"
@@ -48,5 +47,23 @@
         android:text="@string/btn_seeweather"
         style="@style/button"
         />
+
+    <com.example.anh.itenki.utils.CustomTextView
+        android:id="@+id/txAddr2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000080"
+        android:text="@string/txt_select_exist_city"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        />
+
+    <ListView
+        android:layout_marginTop="10dp"
+        android:id="@+id/lvJapanCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
 
 </LinearLayout>

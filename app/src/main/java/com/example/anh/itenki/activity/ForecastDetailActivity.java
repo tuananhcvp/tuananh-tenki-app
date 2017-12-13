@@ -345,7 +345,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialog.show();
-//        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, 1000);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
 }

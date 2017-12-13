@@ -51,12 +51,17 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
         swipeSelected.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
 
         txtCurAddress = (TextView)findViewById(R.id.tvCurLocation);
+        btnDetail = (Button)findViewById(R.id.btnDetail);
         this.getSupportActionBar().setHomeButtonEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if (!Utils.isNetworkConnected(this)) {
+            Toasty.info(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
+            return;
+        }
+
         getWeatherByAddress();
 
-        btnDetail = (Button)findViewById(R.id.btnDetail);
         btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

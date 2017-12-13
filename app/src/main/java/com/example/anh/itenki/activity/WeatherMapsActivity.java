@@ -1,8 +1,6 @@
 package com.example.anh.itenki.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -10,12 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -28,6 +25,8 @@ import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -37,10 +36,13 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -55,6 +57,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +76,10 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     private ProgressDialog dialog;
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    protected static final int REQUEST_FIND_PLACE = 120;
+
+    public ArrayList<Marker> listMarker = new ArrayList<>();
+    public HashMap<Marker, OpenWeatherJSon> markerInfo = new HashMap<Marker, OpenWeatherJSon>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,27 +121,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
-    private void setUpMap() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            mMap.setMyLocationEnabled(true);
-            mMap.setTrafficEnabled(true);
-            mMap.setIndoorEnabled(true);
-            mMap.setBuildingsEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
-
-//            GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-//                @Override
-//                public void onMyLocationChange(Location location) {
-//                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-//                }
-//            };
-//            mMap.setOnMyLocationChangeListener(myLocationChangeListener);
-        }
-    }
-
     public void initView() {
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         hasGPS = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -149,6 +136,79 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             currentLocationWeather();
         }
 
+    }
+
+    private void setUpMap() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMap.setMyLocationEnabled(true);
+            mMap.setTrafficEnabled(true);
+            mMap.setIndoorEnabled(true);
+            mMap.setBuildingsEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+
+            addEvent();
+
+//            GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+//                @Override
+//                public void onMyLocationChange(Location location) {
+//                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+//                }
+//            };
+//            mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+        }
+    }
+
+    private void addEvent() {
+        if(mMap==null) return;
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (!Utils.isNetworkConnected(WeatherMapsActivity.this)) {
+                    layoutWarning.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    layoutWarning.setVisibility(RelativeLayout.GONE);
+                    moveAndShowWeatherNewPlace(latLng);
+                }
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.hideInfoWindow();
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for (Marker mk : listMarker) {
+                    if (mk.getId().equalsIgnoreCase(marker.getId())) {
+                        GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(markerInfo.get(mk), WeatherMapsActivity.this);
+                        mMap.setInfoWindowAdapter(infoAdapter);
+                        marker.showInfoWindow();
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    private void moveAndShowWeatherNewPlace(final LatLng latLng) {
+        if (latLng != null) {
+            float zoom = mMap.getCameraPosition().zoom;
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latLng.latitude+0.008, latLng.longitude))      // Sets the center of the map to location user
+                    .zoom(zoom)                                                         // Sets the zoom
+                    .build();                                                           // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            loadCurrentWeatherByLocation(latLng.latitude, latLng.longitude);
+        }
     }
 
     public void settingsRequest() {
@@ -214,20 +274,40 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                 }, 3000);  //Do something after 3000ms
 
             }
+        } else if (requestCode == REQUEST_FIND_PLACE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.e("Tag", "Place: " + place.getAddress() + place.getPhoneNumber() + place.getLatLng().latitude);
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.getLatLng().latitude,place.getLatLng().longitude), 13));
+                Log.e("Check load location", "Done");
+            }
+        }
+    }
+
+    public void findPlace(View view) {
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
+            startActivityForResult(intent, REQUEST_FIND_PLACE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+        if (!Utils.isNetworkConnected(this)) {
+            layoutWarning.setVisibility(RelativeLayout.VISIBLE);
+        } else {
+            layoutWarning.setVisibility(RelativeLayout.GONE);
         }
     }
 
     private void currentLocationWeather() {
         double lat = SplashScreenActivity.latitude;
         double lon = SplashScreenActivity.longitude;
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                new LatLng(lat, lon), 13));
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(lat+0.008, lon))     // Sets the center of the map to location user
                 .zoom(15)                               // Sets the zoom
-//                        .bearing(90)                  // Sets the orientation of the camera to east
-//                        .tilt(40)                     // Sets the tilt of the camera to 30 degrees
                 .build();                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -246,7 +326,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     }
 
     public void loadCurrentWeatherByLocation(final double lat, final double lon) {
-        dialog.show();
 
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
         Call<OpenWeatherJSon> callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
@@ -255,7 +334,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onResponse(Call<OpenWeatherJSon> call, Response<OpenWeatherJSon> response) {
                 try {
-                    dialog.dismiss();
+
                     JSONObject jsonObject = new JSONObject(new Gson().toJson(response));
                     String weatherJSon = jsonObject.get("body").toString();
                     Log.d("Response","==> "+weatherJSon);
@@ -264,11 +343,13 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
 
                     GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(openWeatherJSon, WeatherMapsActivity.this);
                     mMap.setInfoWindowAdapter(infoAdapter);
-                    MarkerOptions options = new MarkerOptions();
-                    options.position(new LatLng(lat, lon));
-                    Marker marker = mMap.addMarker(options);
+                    MarkerOptions option = new MarkerOptions();
+                    option.position(new LatLng(lat, lon));
+                    option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    Marker marker = mMap.addMarker(option);
+                    listMarker.add(marker);
+                    markerInfo.put(marker, openWeatherJSon);
                     marker.showInfoWindow();
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -278,7 +359,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onFailure(Call<OpenWeatherJSon> call, Throwable t) {
                 Log.d("Response","==> Fail");
-                dialog.dismiss();
             }
         });
 
@@ -298,4 +378,5 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             return null;
         }
     }
+
 }
