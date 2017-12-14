@@ -38,5 +38,6 @@
 
     <string name="txt_enter_address">Enter Address</string>
     <string name="txt_select_exist_city">Select exist city</string>
+    <string name="txt_setting_notify">Weather Notification</string>
 
 </resources>

@@ -32,14 +32,16 @@ public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter 
     private Marker maker;
     private OpenWeatherJSon openWeatherJSon;
     private NumberFormat format = new DecimalFormat("#0.0");
+    private Bitmap bmIcon;
 
     public GoogleMapWeatherInfoAdapter(Activity context) {
         this.context = context;
     }
 
-    public GoogleMapWeatherInfoAdapter(OpenWeatherJSon openWeatherJSon, Activity context) {
+    public GoogleMapWeatherInfoAdapter(OpenWeatherJSon openWeatherJSon, Activity context, Bitmap bitmap) {
         this(context);
         this.openWeatherJSon = openWeatherJSon;
+        this.bmIcon = bitmap;
     }
 
     @Override
@@ -74,7 +76,8 @@ public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter 
         String sunset = timeSunset.getHours()+":"+timeSunset.getMinutes();
 
         tvAddress.setText(curLocation);
-        Glide.with(context).load(urlIconSky).into(imgIconState);
+//        Glide.with(context).load(urlIconSky).asBitmap().into(imgIconState);
+        imgIconState.setImageBitmap(bmIcon);
         tvTemp.setText(temp);
         tvStateMain.setText(stateMain);
         tvMaxMinTemp.setText(maxMinTemp);

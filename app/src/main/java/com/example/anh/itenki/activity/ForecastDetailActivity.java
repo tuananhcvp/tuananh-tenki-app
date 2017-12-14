@@ -342,10 +342,15 @@ public class ForecastDetailActivity extends AppCompatActivity {
 //            }
 //        });
 
-        AlertDialog dialog = builder.create();
-
+        final AlertDialog dialog = builder.create();
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        dialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
 }

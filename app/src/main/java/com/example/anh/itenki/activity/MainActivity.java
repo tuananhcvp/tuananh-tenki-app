@@ -35,7 +35,9 @@ import android.view.MenuItem;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.fragment.CurrentLocationFragment;
+import com.example.anh.itenki.fragment.NoteFragment;
 import com.example.anh.itenki.fragment.SelectLocationFragment;
+import com.example.anh.itenki.fragment.SettingFragment;
 import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private ProgressDialog dialog;
     public static Point screenSize;
+
+    public static final int NOTIFY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,9 +176,13 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(3).setChecked(true);
             navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
+            callFragment(NoteFragment.newInstance());
+
         } else if (id == R.id.nav_setting) {
             navigationView.getMenu().getItem(4).setChecked(true);
             navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
+
+            callFragment(SettingFragment.newInstance());
 
         } else if (id == R.id.nav_about) {
             navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(true);

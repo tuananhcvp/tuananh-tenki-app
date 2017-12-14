@@ -61,16 +61,21 @@ public class Utils {
         tvTemp.setText(temp);
         tvStateMain.setText(stateMain);
         tvMaxMinTemp.setText(maxMinTemp);
-        tvWind.setText("Wind: "+wind);
-        tvPress.setText("Press: "+press);
-        tvHumidity.setText("Hum: "+humidity);
-        tvState.setText("State: "+state);
-        tvSunrise.setText("Sunrise: "+sunrise);
-        tvSunset.setText("Sunset: "+sunset);
+        tvWind.setText(activity.getResources().getString(R.string.txt_wind)+wind);
+        tvPress.setText(activity.getResources().getString(R.string.txt_pressure)+press);
+        tvHumidity.setText(activity.getResources().getString(R.string.txt_humidity)+humidity);
+        tvState.setText(activity.getResources().getString(R.string.txt_state)+state);
+        tvSunrise.setText(activity.getResources().getString(R.string.txt_sunrise)+sunrise);
+        tvSunset.setText(activity.getResources().getString(R.string.txt_sunset)+sunset);
     }
 
     public static boolean isNetworkConnected(Activity activity) {
         ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
 

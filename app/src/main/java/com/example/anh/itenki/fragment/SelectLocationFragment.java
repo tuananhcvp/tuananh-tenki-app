@@ -21,6 +21,9 @@ import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SelectedLocationWeatherActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.dmoral.toasty.Toasty;
 
 /**

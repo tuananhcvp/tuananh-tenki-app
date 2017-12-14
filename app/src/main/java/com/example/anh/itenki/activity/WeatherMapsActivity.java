@@ -49,6 +49,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,7 +82,8 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     protected static final int REQUEST_FIND_PLACE = 120;
 
     public ArrayList<Marker> listMarker = new ArrayList<>();
-    public HashMap<Marker, OpenWeatherJSon> markerInfo = new HashMap<Marker, OpenWeatherJSon>();
+    public HashMap<Marker, OpenWeatherJSon> markerInfo = new HashMap<>();
+    public HashMap<Marker, Bitmap> markerBitmap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +192,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             public boolean onMarkerClick(Marker marker) {
                 for (Marker mk : listMarker) {
                     if (mk.getId().equalsIgnoreCase(marker.getId())) {
-                        GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(markerInfo.get(mk), WeatherMapsActivity.this);
+                        GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(markerInfo.get(mk), WeatherMapsActivity.this, markerBitmap.get(mk));
                         mMap.setInfoWindowAdapter(infoAdapter);
                         marker.showInfoWindow();
                     }
@@ -260,6 +264,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         if(requestCode==REQUEST_CHECK_SETTINGS) {
             SharedPreference.getInstance(this).putBoolean("isPermisionLocation",true);
             if(resultCode == RESULT_OK) {
+                dialog.show();
                 if(LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();
@@ -273,6 +278,12 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                     }
                 }, 3000);  //Do something after 3000ms
 
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentLocationWeather();
+                    }
+                }, 4000);  //Do something after 4000ms
             }
         } else if (requestCode == REQUEST_FIND_PLACE) {
             if (resultCode == RESULT_OK) {
@@ -311,13 +322,15 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                 .build();                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
-            }
-        }, 1000);  //Do something after 1000ms
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+//            }
+//        }, 1000);  //Do something after 1000ms
+
+        loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
     }
 
     public void initService() {
@@ -334,22 +347,32 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onResponse(Call<OpenWeatherJSon> call, Response<OpenWeatherJSon> response) {
                 try {
-
+                    dialog.dismiss();
                     JSONObject jsonObject = new JSONObject(new Gson().toJson(response));
                     String weatherJSon = jsonObject.get("body").toString();
                     Log.d("Response","==> "+weatherJSon);
-                    OpenWeatherJSon openWeatherJSon = new Gson().fromJson(weatherJSon, new TypeToken<OpenWeatherJSon>(){}.getType());
+                    final OpenWeatherJSon openWeatherJSon = new Gson().fromJson(weatherJSon, new TypeToken<OpenWeatherJSon>(){}.getType());
                     Log.d("openWeatherJSon","==> "+new Gson().toJson(openWeatherJSon));
 
-                    GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(openWeatherJSon, WeatherMapsActivity.this);
-                    mMap.setInfoWindowAdapter(infoAdapter);
-                    MarkerOptions option = new MarkerOptions();
-                    option.position(new LatLng(lat, lon));
-                    option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    Marker marker = mMap.addMarker(option);
-                    listMarker.add(marker);
-                    markerInfo.put(marker, openWeatherJSon);
-                    marker.showInfoWindow();
+                    String urlIcon = getString(R.string.base_icon_url)+openWeatherJSon.getWeather().get(0).getIcon()+".png";
+                    ImageLoader imageLoader = ImageLoader.getInstance();
+                    imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
+                    imageLoader.loadImage(urlIcon, new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            GoogleMapWeatherInfoAdapter infoAdapter = new GoogleMapWeatherInfoAdapter(openWeatherJSon, WeatherMapsActivity.this, loadedImage);
+                            mMap.setInfoWindowAdapter(infoAdapter);
+                            MarkerOptions option = new MarkerOptions();
+                            option.position(new LatLng(lat, lon));
+                            option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                            Marker marker = mMap.addMarker(option);
+                            listMarker.add(marker);
+                            markerInfo.put(marker, openWeatherJSon);
+                            markerBitmap.put(marker, loadedImage);
+                            marker.showInfoWindow();
+                        }
+                    }) ;
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -359,6 +382,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onFailure(Call<OpenWeatherJSon> call, Throwable t) {
                 Log.d("Response","==> Fail");
+                dialog.dismiss();
             }
         });
 
