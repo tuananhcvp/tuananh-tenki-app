@@ -14,15 +14,15 @@
     <string name="check_data_not_found">Data not found!</string>
     <string name="btn_detail">Detail</string>
     <string name="btn_seeweather">See Weather</string>
-    <string name="txt_wind">Wind: </string>
-    <string name="txt_pressure">Press: </string>
-    <string name="txt_humidity">Hum: </string>
-    <string name="txt_state">State: </string>
-    <string name="txt_sunrise">Sunrise: </string>
-    <string name="txt_sunset">Sunset: </string>
-    <string name="txt_morning">Morning: </string>
-    <string name="txt_evening">Evening: </string>
-    <string name="txt_night">Night: </string>
+    <string name="txt_wind">Wind</string>
+    <string name="txt_pressure">Press</string>
+    <string name="txt_humidity">Hum</string>
+    <string name="txt_state">State</string>
+    <string name="txt_sunrise">Sunrise</string>
+    <string name="txt_sunset">Sunset</string>
+    <string name="txt_morning">Morning</string>
+    <string name="txt_evening">Evening</string>
+    <string name="txt_night">Night</string>
 
     <string name="title_forecast_detail">Forecast Detail</string>
     <string name="title_current_location">Current Location</string>
@@ -39,5 +39,8 @@
     <string name="txt_enter_address">Enter Address</string>
     <string name="txt_select_exist_city">Select exist city</string>
     <string name="txt_setting_notify">Weather Notification</string>
+    <string name="txt_language">Language</string>
+    <string name="txt_english">English</string>
+    <string name="txt_japan">Japanese</string>
 
 </resources>

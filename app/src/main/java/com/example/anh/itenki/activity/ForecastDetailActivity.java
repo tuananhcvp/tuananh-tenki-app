@@ -20,6 +20,7 @@ import com.example.anh.itenki.adapter.HorizontalListViewDailyAdapter;
 import com.example.anh.itenki.adapter.NextDaysWeatherAdapter;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.dailyforecast.OpenWeatherDailyJSon;
+import com.example.anh.itenki.model.nextdaysforecast.ListItem;
 import com.example.anh.itenki.model.nextdaysforecast.OpenWeatherNextDaysJSon;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
@@ -105,7 +106,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                         Log.e("DAILY WEATHER", "==> " + new Gson().toJson(response.body()));
 
                         for (int i = 0;i < 8;i++) {
-                            String temp = format.format(response.body().getList().get(i).getMain().getTemp()-273.15)+"°C";
+                            String temp = format.format(response.body().getList().get(i).getMain().getTemp() - 273.15) + "°C";
                             arrDailyTemp[i] = temp;
                             urlDailyIcon[i] = response.body().getList().get(i).getWeather().get(0).getIcon();
                         }
@@ -157,6 +158,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                 });
 
                 break;
+
             case TYPE_DAILY_LOCATION:
                 Call<OpenWeatherDailyJSon> callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
                 Call<OpenWeatherNextDaysJSon> callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
@@ -221,6 +223,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                 });
 
                 break;
+
             default:
                 break;
         }
@@ -307,29 +310,30 @@ public class ForecastDetailActivity extends AppCompatActivity {
         TextView tvHum = v.findViewById(R.id.tvHum);
         TextView tvPress = v.findViewById(R.id.tvPress);
 
-        String tempDay = format.format(nextDaysJSon.getList().get(i+1).getTemp().getDay()-273.15)+"°C";
-        String state = nextDaysJSon.getList().get(i+1).getWeather().get(0).getDescription().toString();
-        String tempMax = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMax()-273.15)+"°C";
-        String tempMin = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMin()-273.15)+"°C";
-        String tempMorn = format.format(nextDaysJSon.getList().get(i+1).getTemp().getMorn()-273.15)+"°C";
-        String tempEve = format.format(nextDaysJSon.getList().get(i+1).getTemp().getEve()-273.15)+"°C";
-        String tempNight = format.format(nextDaysJSon.getList().get(i+1).getTemp().getNight()-273.15)+"°C";
-        String wind = nextDaysJSon.getList().get(i+1).getSpeed()+"m/s";
-        String press = nextDaysJSon.getList().get(i+1).getPressure()+"hpa";
-        String hum = nextDaysJSon.getList().get(i+1).getHumidity()+"%";
-        String urlIcon = nextDaysJSon.getList().get(i+1).getWeather().get(0).getIcon();
+        ListItem item = nextDaysJSon.getList().get(i+1);
+        String tempDay = format.format(item.getTemp().getDay()-273.15)+"°C";
+        String state = item.getWeather().get(0).getDescription();
+        String tempMax = format.format(item.getTemp().getMax()-273.15)+"°C";
+        String tempMin = format.format(item.getTemp().getMin()-273.15)+"°C";
+        String tempMorn = format.format(item.getTemp().getMorn()-273.15)+"°C";
+        String tempEve = format.format(item.getTemp().getEve()-273.15)+"°C";
+        String tempNight = format.format(item.getTemp().getNight()-273.15)+"°C";
+        String wind = item.getSpeed()+"m/s";
+        String press = item.getPressure()+"hpa";
+        String hum = item.getHumidity()+"%";
+        String urlIcon = item.getWeather().get(0).getIcon();
 
         tvDate.setText(date);
         Glide.with(this).load(getString(R.string.base_icon_url)+urlIcon+".png").into(imgIconState);
         tvTemp.setText(tempDay);
         tvState.setText(state);
-        tvMaxMinTemp.setText(tempMax+"/"+tempMin);
-        tvMorTemp.setText(getResources().getString(R.string.txt_morning)+" "+ tempMorn);
-        tvEveTemp.setText(getResources().getString(R.string.txt_evening)+" "+tempEve);
-        tvNightTemp.setText(getResources().getString(R.string.txt_night)+" "+tempNight);
-        tvWind.setText(getResources().getString(R.string.txt_wind)+" "+wind);
-        tvHum.setText(getResources().getString(R.string.txt_humidity)+" "+hum);
-        tvPress.setText(getResources().getString(R.string.txt_pressure)+" "+press);
+        tvMaxMinTemp.setText(tempMax + "/" + tempMin);
+        tvMorTemp.setText(getResources().getString(R.string.txt_morning) + ": " + tempMorn);
+        tvEveTemp.setText(getResources().getString(R.string.txt_evening) + ": " + tempEve);
+        tvNightTemp.setText(getResources().getString(R.string.txt_night) + ": " + tempNight);
+        tvWind.setText(getResources().getString(R.string.txt_wind) + ": " + wind);
+        tvHum.setText(getResources().getString(R.string.txt_humidity) + ": " + hum);
+        tvPress.setText(getResources().getString(R.string.txt_pressure) + ": " + press);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("");

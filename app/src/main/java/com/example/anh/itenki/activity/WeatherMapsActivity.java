@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -56,18 +55,12 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.R.attr.data;
 
 public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -283,7 +276,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                     public void run() {
                         currentLocationWeather();
                     }
-                }, 4000);  //Do something after 4000ms
+                }, 4000);
             }
         } else if (requestCode == REQUEST_FIND_PLACE) {
             if (resultCode == RESULT_OK) {
@@ -386,21 +379,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-    }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
     }
 
 }

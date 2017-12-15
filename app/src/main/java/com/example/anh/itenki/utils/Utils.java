@@ -3,10 +3,13 @@ package com.example.anh.itenki.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBar;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,6 +23,7 @@ import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by anh on 2017/12/06.
@@ -61,12 +65,12 @@ public class Utils {
         tvTemp.setText(temp);
         tvStateMain.setText(stateMain);
         tvMaxMinTemp.setText(maxMinTemp);
-        tvWind.setText(activity.getResources().getString(R.string.txt_wind)+wind);
-        tvPress.setText(activity.getResources().getString(R.string.txt_pressure)+press);
-        tvHumidity.setText(activity.getResources().getString(R.string.txt_humidity)+humidity);
-        tvState.setText(activity.getResources().getString(R.string.txt_state)+state);
-        tvSunrise.setText(activity.getResources().getString(R.string.txt_sunrise)+sunrise);
-        tvSunset.setText(activity.getResources().getString(R.string.txt_sunset)+sunset);
+        tvWind.setText(activity.getResources().getString(R.string.txt_wind)+": "+wind);
+        tvPress.setText(activity.getResources().getString(R.string.txt_pressure)+": "+press);
+        tvHumidity.setText(activity.getResources().getString(R.string.txt_humidity)+": "+humidity);
+        tvState.setText(activity.getResources().getString(R.string.txt_state)+": "+state);
+        tvSunrise.setText(activity.getResources().getString(R.string.txt_sunrise)+": "+sunrise);
+        tvSunset.setText(activity.getResources().getString(R.string.txt_sunset)+": "+sunset);
     }
 
     public static boolean isNetworkConnected(Activity activity) {
@@ -101,6 +105,15 @@ public class Utils {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.setIndeterminate(true);
+    }
+
+    public static void setLocaleLanguage(Context context, String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
 }
 

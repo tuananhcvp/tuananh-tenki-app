@@ -113,5 +113,20 @@ public class SharedPreference {
             return defaultValue;
         }
     }
+
+    //Double
+    public void putDouble(String key, double value) {
+        doEdit();
+        mEditor.putLong(key, java.lang.Double.doubleToRawLongBits(value));
+        doCommit();
+    }
+
+    public double getDouble(String key, double defaultValue) {
+        if (mPref!=null) {
+            return java.lang.Double.longBitsToDouble(mPref.getLong(key, java.lang.Double.doubleToRawLongBits(defaultValue)));
+        } else {
+            return defaultValue;
+        }
+    }
 }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ITenki</string>
+    <string name="appid_weather">ad470c82b413cb03c8a38a020b76561e</string>
+    <string name="base_icon_url">http://openweathermap.org/img/w/</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">設定</string>
+    <string name="cancel">キャンセル</string>
+    <string name="GPSAlertDialogMessage">Press \'Setting\' to enable GPS</string>
+    <string name="GPSAlertDialogTitle">Setting GPS</string>
+    <string name="check_internet">インターネット接続を確認してください</string>
+    <string name="check_data_not_found">データが見つからない</string>
+    <string name="btn_detail">詳細</string>
+    <string name="btn_seeweather">天気を見る</string>
+    <string name="txt_wind">風</string>
+    <string name="txt_pressure">気圧</string>
+    <string name="txt_humidity">湿度</string>
+    <string name="txt_state">状態</string>
+    <string name="txt_sunrise">日出</string>
+    <string name="txt_sunset">日没</string>
+    <string name="txt_morning">朝</string>
+    <string name="txt_evening">晩</string>
+    <string name="txt_night">夜</string>
+
+    <string name="title_forecast_detail">詳細予報</string>
+    <string name="title_current_location">現在位置</string>
+    <string name="title_select_location">市選択</string>
+    <string name="title_selected_city">選択した市</string>
+    <string name="title_google_map">Google マップ</string>
+    <string name="title_setting">設定</string>
+    <string name="title_tenki_note">ノート</string>
+    <string name="title_introduction">Introduction</string>
+    <string name="title_about">アプリ情報</string>
+    <string name="dialog_data_loading">読み込み中...</string>
+    <string name="title_activity_weather_maps">Map</string>
+
+    <string name="txt_enter_address">市を入力する</string>
+    <string name="txt_select_exist_city">市一覧で選択する</string>
+    <string name="txt_setting_notify">天気通知</string>
+    <string name="txt_language">言語</string>
+    <string name="txt_english">英語</string>
+    <string name="txt_japan">日本語</string>
+</resources>

@@ -2,23 +2,17 @@ package com.example.anh.itenki.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.anh.itenki.R;
-import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -64,8 +58,8 @@ public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter 
         String temp = format.format(openWeatherJSon.getMain().getTemp()-273.15)+"°C";
         String urlIconSky = context.getString(R.string.base_icon_url)+openWeatherJSon.getWeather().get(0).getIcon()+".png";
         String stateMain = openWeatherJSon.getWeather().get(0).getMain().toString();
-        String maxMinTemp = format.format(openWeatherJSon.getMain().getTemp_max()-273.15)+"°C/"+
-                format.format(openWeatherJSon.getMain().getTemp_min()-273.15)+"°C";
+        String maxMinTemp = format.format(openWeatherJSon.getMain().getTemp_max()-273.15)+"°C/"
+                + format.format(openWeatherJSon.getMain().getTemp_min()-273.15)+"°C";
         String wind = openWeatherJSon.getWind().getSpeed()+"m/s";
         String press = openWeatherJSon.getMain().getPressure()+"hpa";
         String humidity = openWeatherJSon.getMain().getHumidity()+"%";
@@ -81,12 +75,12 @@ public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter 
         tvTemp.setText(temp);
         tvStateMain.setText(stateMain);
         tvMaxMinTemp.setText(maxMinTemp);
-        tvWind.setText(context.getString(R.string.txt_wind)+wind);
-        tvPress.setText(context.getString(R.string.txt_pressure)+press);
-        tvHum.setText(context.getString(R.string.txt_humidity)+humidity);
-        tvState.setText(context.getString(R.string.txt_state)+state);
-        tvSunrise.setText(context.getString(R.string.txt_sunrise)+sunrise);
-        tvSunset.setText(context.getString(R.string.txt_sunset)+sunset);
+        tvWind.setText(context.getString(R.string.txt_wind) + ": " + wind);
+        tvPress.setText(context.getString(R.string.txt_pressure) + ": " + press);
+        tvHum.setText(context.getString(R.string.txt_humidity) + ": " + humidity);
+        tvState.setText(context.getString(R.string.txt_state) + ": " + state);
+        tvSunrise.setText(context.getString(R.string.txt_sunrise) + ": " + sunrise);
+        tvSunset.setText(context.getString(R.string.txt_sunset) + ": " + sunset);
 
         v.setBackgroundColor(ContextCompat.getColor(context, R.color.skyblue));
         v.setLayoutParams(new LinearLayout.LayoutParams(800, 1000));

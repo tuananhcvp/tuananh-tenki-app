@@ -48,6 +48,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
                     Log.d("LocationService.class","Latitude: "+mLastLocation.getLatitude());
                     SplashScreenActivity.latitude = mLastLocation.getLatitude();
                     SplashScreenActivity.longitude = mLastLocation.getLongitude();
+                    SharedPreference.getInstance(this).putDouble("latitude", SplashScreenActivity.latitude);
+                    SharedPreference.getInstance(this).putDouble("longitude", SplashScreenActivity.longitude);
                     intent.putExtra("Latitude", mLastLocation.getLatitude());
                     intent.putExtra("Longitude", mLastLocation.getLongitude());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -8,23 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical">
+        android:layout_marginTop="10dp" >
         <ImageView
             android:id="@+id/imgIconNoti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_notify"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#000000"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/imgIconNoti"
             android:layout_marginLeft="5dp"
-            android:text="@string/txt_setting_notify"/>
+            android:text="@string/txt_setting_notify"
+            android:layout_centerVertical="true"/>
         <Switch
             android:id="@+id/swtNotify"
             android:layout_width="wrap_content"
@@ -35,6 +35,35 @@
             android:textSize="18sp"
             android:textOn="ON"
             android:textOff="OFF"
+            android:layout_centerVertical="true"
             />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/imgIconLang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_language"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_toRightOf="@+id/imgIconLang"
+            android:text="@string/txt_language"
+            android:layout_centerVertical="true"/>
+        <Spinner
+            android:id="@+id/spnLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
     </RelativeLayout>
 </LinearLayout>

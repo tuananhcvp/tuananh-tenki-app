@@ -1,24 +1,23 @@
 package com.example.anh.itenki.activity;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.utils.LocationService;
+import com.example.anh.itenki.utils.SharedPreference;
+import com.example.anh.itenki.utils.Utils;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private boolean _active = false;
     private int _splashTime = 2500;
-    private ImageView imgSplash;
     public static double latitude, longitude;
 
     @Override
@@ -28,22 +27,20 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
 
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int height = (int) (displayMetrics.heightPixels/displayMetrics.density);
-//        int width = (int) (displayMetrics.widthPixels/displayMetrics.density);
-
-        imgSplash = (ImageView)findViewById(R.id.imgSplash);
-//        RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(displayMetrics.widthPixels, displayMetrics.heightPixels);
-//        imgSplash.setLayoutParams(param);
         initService();
 
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
+        Log.e("LANGUAGE", "==> " + posLanguage);
+        if (posLanguage == 0) {
+            Utils.setLocaleLanguage(this, "en");
+        } else if (posLanguage == 1) {
+            Utils.setLocaleLanguage(this, "ja");
+        }
 
-        if(isNetworkConnected()) {
+        if(Utils.isNetworkConnected(this)) {
             splash();
         } else {
             Toast.makeText(getApplicationContext(), "Check your network connection!", Toast.LENGTH_SHORT).show();
-
         }
 
         final SwipeRefreshLayout swipe = (SwipeRefreshLayout)findViewById(R.id.swipeSplash);
@@ -51,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(isNetworkConnected()&&!_active) {
+                if(Utils.isNetworkConnected(SplashScreenActivity.this)&&!_active) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -60,7 +57,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             swipe.setRefreshing(false);
                         }
                     }, 3000);
-                } else if (!isNetworkConnected()) {
+                } else if (!Utils.isNetworkConnected(SplashScreenActivity.this)) {
                     Toast.makeText(getApplicationContext(), "Check your network connection!", Toast.LENGTH_SHORT).show();
                     swipe.setRefreshing(false);
                 }
@@ -91,11 +88,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         };
         splashThread.start();
-    }
-
-    public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
     }
 
     public void initService() {

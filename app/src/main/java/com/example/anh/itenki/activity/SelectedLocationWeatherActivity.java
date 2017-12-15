@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
+import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
 import com.google.gson.Gson;

@@ -265,21 +265,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5">
-                <!--<Button-->
-                    <!--android:id="@+id/btnDetail"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:text="Details"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:textAllCaps="false"-->
-                    <!--android:background="@drawable/buttonshape"-->
-                    <!--android:shadowColor="#A8A8A8"-->
-                    <!--android:shadowDx="4"-->
-                    <!--android:shadowDy="4"-->
-                    <!--android:shadowRadius="5"-->
-                    <!--android:minHeight="35dp"-->
-                    <!--/>-->
                 <Button
                     android:id="@+id/btnDetail"
                     android:layout_width="wrap_content"
