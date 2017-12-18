@@ -45,18 +45,29 @@ public class CreateNoteFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.e("CreateNoteFrag", "==> onActivityCreated");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("CreateNoteFrag", "==> onCreate");
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            // called here
+            Log.e("CreateNoteFrag", "==> visible");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e("CreateNoteFrag", "==> onCreateView");
         View v = inflater.inflate(R.layout.fragment_create_note, container, false);
-
         edtContent = (EditText) v.findViewById(R.id.edtContent);
         txtNoteTime = (TextView) v.findViewById(R.id.txtNoteTime);
 
@@ -107,18 +118,18 @@ public class CreateNoteFragment extends Fragment {
             e.printStackTrace();
         }
 
-        if (mode == MODE_CREATE) {
-            String createTime = getResources().getString(R.string.create_at) + ": " + getCurrentTime();
-            Note mNote = new Note(content, createTime, "");
-            db.addNote(mNote);
-
-        } else if (mode == MODE_EDIT) {
-            String modifyTime = getResources().getString(R.string.modify_at) + ": " + getCurrentTime();
-            note.setContent(content);
-            note.setModifyTime(modifyTime);
-            db.updateNote(note);
-        }
-        Toasty.info(getContext(), getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
+//        if (mode == MODE_CREATE) {
+//            String createTime = getResources().getString(R.string.create_at) + ": " + getCurrentTime();
+//            Note mNote = new Note(content, createTime, "");
+//            db.addNote(mNote);
+//
+//        } else if (mode == MODE_EDIT) {
+//            String modifyTime = getResources().getString(R.string.modify_at) + ": " + getCurrentTime();
+//            note.setContent(content);
+//            note.setModifyTime(modifyTime);
+//            db.updateNote(note);
+//        }
+//        Toasty.info(getContext(), getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
     }
 
     public String getCurrentTime() {
@@ -132,5 +143,12 @@ public class CreateNoteFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("CreateNoteFrag", "==> onResume");
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("CreateNoteFrag", "==> onStop");
     }
 }

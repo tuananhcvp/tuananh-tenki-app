@@ -79,7 +79,7 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
 
             @Override
             public void onPageSelected(int position) {
-                Log.e("onPageSelected", "=> " + position);
+                Log.e("onPageSelected", "=> " + position + "--" + pagerNote.getCurrentItem());
 //                pagerNote.getAdapter().notifyDataSetChanged();
             }
 
@@ -132,8 +132,15 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
 
         @Override
         public int getItemPosition(Object object) {
-            return POSITION_NONE;
-//            return super.getItemPosition(object);
+//            return POSITION_NONE;
+            if (object instanceof CreateNoteFragment) {
+                Log.e("getItemPosition", "==> CreateNoteFragment");
+            } else if (object instanceof ListNoteFragment) {
+                Log.e("getItemPosition", "==> ListNoteFragment");
+            } else if (object instanceof ListAlarmNoteFragment) {
+                Log.e("getItemPosition", "==> ListAlarmNoteFragme7etynt");
+            }
+            return super.getItemPosition(object);
         }
     }
 
@@ -147,7 +154,5 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(this);
     }
-
-
 
 }
