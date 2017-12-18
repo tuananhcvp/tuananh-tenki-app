@@ -41,7 +41,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,this);
             try {
-
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (mLastLocation != null) {
                     Log.d("LocationService.class","Longitude: "+mLastLocation.getLongitude());

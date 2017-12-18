@@ -6,7 +6,7 @@
     android:padding="10dp"
     android:background="@drawable/wpp11"
     android:orientation="vertical">
-    <com.example.anh.itenki.utils.CustomTextView
+    <com.example.anh.itenki.view.CustomTextView
         android:id="@+id/txAddr1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         style="@style/button"
         />
 
-    <com.example.anh.itenki.utils.CustomTextView
+    <com.example.anh.itenki.view.CustomTextView
         android:id="@+id/txAddr2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

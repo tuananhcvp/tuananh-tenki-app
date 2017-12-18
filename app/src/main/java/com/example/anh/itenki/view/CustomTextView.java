@@ -1,4 +1,4 @@
-package com.example.anh.itenki.utils;
+package com.example.anh.itenki.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -36,18 +36,17 @@ public class CustomTextView extends TextView {
         init(attrs);
     }
 
-    private void init(AttributeSet attrs){
-        if (attrs != null){
+    private void init(AttributeSet attrs) {
+        if (attrs != null) {
             TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTextView);
             String fontName = arr.getString(R.styleable.CustomTextView_font);
 
             try {
-                if (fontName != null){
+                if (fontName != null) {
                     Typeface myTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/"+fontName);
                     setTypeface(myTypeface);
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             arr.recycle();

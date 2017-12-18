@@ -43,4 +43,10 @@
     <string name="txt_language">言語</string>
     <string name="txt_english">英語</string>
     <string name="txt_japan">日本語</string>
+    <string name="txt_title">タイトル</string>
+
+    <string name="Create_at">Create at</string>
+    <string name="modify_at">Modified at</string>
+    <string name="note_saved">Note saved</string>
+    <string name="search">Search</string>
 </resources>

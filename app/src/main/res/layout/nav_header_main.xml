@@ -19,7 +19,7 @@
         android:layout_marginBottom="12dp"
         android:src="@drawable/snow_occasional_icon" />
 
-    <com.example.anh.itenki.utils.CustomTextView
+    <com.example.anh.itenki.view.CustomTextView
         android:id="@+id/txtWeatherApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
