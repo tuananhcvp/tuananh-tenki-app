@@ -18,6 +18,8 @@ import android.widget.Switch;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.MainActivity;
+import com.example.anh.itenki.model.AlarmNote;
+import com.example.anh.itenki.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,8 @@ import java.util.List;
  * Created by anh on 2017/12/14.
  */
 
-public class NoteFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class NoteFragment extends Fragment implements SearchView.OnQueryTextListener, ListNoteFragment.OnListNoteFragmentListener,
+        ListAlarmNoteFragment.OnListAlarmNoteListener {
     private ViewPager pagerNote;
     private TabLayout tabsNote;
     private ViewPagerAdapter pagerAdapter;
@@ -57,10 +60,13 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
         tabsNote = (TabLayout) v.findViewById(R.id.tabsNote);
 
         pagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
-        pagerAdapter.addFragment(CreateNoteFragment.newInstance(), "Create Note");
-        pagerAdapter.addFragment(ListNoteFragment.newInstance(), "List Note");
-        pagerAdapter.addFragment(ListAlarmNoteFragment.newInstance(), "Alarm Note");
+        pagerAdapter.addFragment(CreateNoteFragment.newInstance(), getResources().getString(R.string.create_note));
+        pagerAdapter.addFragment(ListNoteFragment.newInstance(), getResources().getString(R.string.list_note));
+        pagerAdapter.addFragment(ListAlarmNoteFragment.newInstance(), getResources().getString(R.string.alarm_note));
         pagerNote.setAdapter(pagerAdapter);
+
+        ((ListNoteFragment) pagerAdapter.getItem(1)).setNoteCallbackListener(this);
+        ((ListAlarmNoteFragment) pagerAdapter.getItem(2)).setAlarmNoteCallbackListener(this);
 
         tabsNote.setupWithViewPager(pagerNote);
 
@@ -101,12 +107,26 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
         return false;
     }
 
-    // Adapter for the viewpager using FragmentPagerAdapter
+    @Override
+    public void sendNoteInfo(Note note) {
+        pagerNote.setCurrentItem(0);
+        ((CreateNoteFragment) pagerAdapter.getItem(0)).showNoteEdit(note);
+    }
+
+    @Override
+    public void sendAlarmNoteInfo(AlarmNote note) {
+        pagerNote.setCurrentItem(0);
+        ((CreateNoteFragment) pagerAdapter.getItem(0)).showNoteAlarm(note);
+    }
+
+    /**
+     * Adapter for the viewpager using FragmentPagerAdapter
+     */
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        private ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -120,7 +140,7 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        private void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
@@ -130,18 +150,6 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
             return mFragmentTitleList.get(position);
         }
 
-        @Override
-        public int getItemPosition(Object object) {
-//            return POSITION_NONE;
-            if (object instanceof CreateNoteFragment) {
-                Log.e("getItemPosition", "==> CreateNoteFragment");
-            } else if (object instanceof ListNoteFragment) {
-                Log.e("getItemPosition", "==> ListNoteFragment");
-            } else if (object instanceof ListAlarmNoteFragment) {
-                Log.e("getItemPosition", "==> ListAlarmNoteFragme7etynt");
-            }
-            return super.getItemPosition(object);
-        }
     }
 
     @Override

@@ -15,6 +15,8 @@ import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 
+import es.dmoral.toasty.Toasty;
+
 public class SplashScreenActivity extends AppCompatActivity {
     private boolean _active = false;
     private int _splashTime = 2500;
@@ -40,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if(Utils.isNetworkConnected(this)) {
             splash();
         } else {
-            Toast.makeText(getApplicationContext(), "Check your network connection!", Toast.LENGTH_SHORT).show();
+            Toasty.info(getApplicationContext(), getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
         }
 
         final SwipeRefreshLayout swipe = (SwipeRefreshLayout)findViewById(R.id.swipeSplash);
@@ -48,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Utils.isNetworkConnected(SplashScreenActivity.this)&&!_active) {
+                if(Utils.isNetworkConnected(SplashScreenActivity.this) && !_active) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -58,7 +60,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         }
                     }, 3000);
                 } else if (!Utils.isNetworkConnected(SplashScreenActivity.this)) {
-                    Toast.makeText(getApplicationContext(), "Check your network connection!", Toast.LENGTH_SHORT).show();
+                    Toasty.info(getApplicationContext(), getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
                     swipe.setRefreshing(false);
                 }
 

@@ -31,6 +31,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile files('libs/aniqroid-2.1.jar')
 
     // Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -39,7 +40,6 @@ dependencies {
     // JSON Parsing
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    
 
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
@@ -55,5 +55,5 @@ dependencies {
     compile 'com.github.GrenderG:Toasty:1.2.5'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
-    compile files('libs/aniqroid-2.1.jar')
+    compile 'com.android.support:multidex:1.0.0'
 }

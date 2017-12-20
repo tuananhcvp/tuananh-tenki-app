@@ -46,6 +46,15 @@
         </activity>
         <activity android:name=".activity.SelectedLocationWeatherActivity" />
         <activity android:name=".activity.ForecastDetailActivity" />
+        <activity android:name=".activity.AlarmActivity" />
+
+        <activity
+            android:name=".activity.AlertAlarmNoteActivity">
+            <intent-filter>
+                <action android:name="com.example.anh.itenki.activity.alertalarmnoteActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <service android:name=".utils.LocationService" />
         <!--

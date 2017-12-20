@@ -12,7 +12,7 @@
     <string name="GPSAlertDialogMessage">Press \'Setting\' to enable GPS</string>
     <string name="GPSAlertDialogTitle">Setting GPS</string>
     <string name="check_internet">インターネット接続を確認してください</string>
-    <string name="check_data_not_found">データが見つからない</string>
+    <string name="check_data_not_found">データが見つかれません</string>
     <string name="btn_detail">詳細</string>
     <string name="btn_seeweather">天気を見る</string>
     <string name="txt_wind">風</string>
@@ -27,26 +27,42 @@
 
     <string name="title_forecast_detail">詳細予報</string>
     <string name="title_current_location">現在位置</string>
-    <string name="title_select_location">市選択</string>
+    <string name="title_select_location">都道府県選択</string>
     <string name="title_selected_city">選択した市</string>
     <string name="title_google_map">Google マップ</string>
     <string name="title_setting">設定</string>
-    <string name="title_tenki_note">ノート</string>
-    <string name="title_introduction">Introduction</string>
+    <string name="title_tenki_note">メモ</string>
+    <string name="title_introduction">紹介</string>
     <string name="title_about">アプリ情報</string>
     <string name="dialog_data_loading">読み込み中...</string>
     <string name="title_activity_weather_maps">Map</string>
 
-    <string name="txt_enter_address">市を入力する</string>
-    <string name="txt_select_exist_city">市一覧で選択する</string>
+    <string name="txt_enter_address">都道府県を入力する</string>
+    <string name="txt_select_exist_city">県一覧で選択する</string>
     <string name="txt_setting_notify">天気通知</string>
     <string name="txt_language">言語</string>
     <string name="txt_english">英語</string>
     <string name="txt_japan">日本語</string>
     <string name="txt_title">タイトル</string>
+    <string name="txt_save">保存</string>
+    <string name="txt_clear">削除</string>
+    <string name="txt_reload">リロード</string>
+    <string name="txt_yes">Yes</string>
+    <string name="txt_no">No</string>
 
-    <string name="Create_at">Create at</string>
-    <string name="modify_at">Modified at</string>
-    <string name="note_saved">Note saved</string>
-    <string name="search">Search</string>
+    <string name="create_at">作成時間</string>
+    <string name="modify_at">編集時間</string>
+    <string name="alarm_at">警報時間</string>
+    <string name="note_saved">保存された</string>
+    <string name="search">検索</string>
+    <string name="set_alarm">警報を設定する</string>
+    <string name="check_delete">Are you sure want to delete?</string>
+    <string name="select_action">アクションを選択する</string>
+    <string name="delete_note">メモを削除する</string>
+    <string name="alarm_success">Alarm is set successfully!</string>
+    <string name="not_connect">インターネット接続がありません!</string>
+    <string name="input_address">箇所を入力してください!</string>
+    <string name="create_note">メモ作成</string>
+    <string name="list_note">メモ一覧</string>
+    <string name="alarm_note">警報一覧</string>
 </resources>

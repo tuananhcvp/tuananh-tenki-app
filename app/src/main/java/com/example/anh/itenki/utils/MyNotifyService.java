@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -59,14 +60,14 @@ public class MyNotifyService extends Service  {
         double lon = SharedPreference.getInstance(this).getDouble("longitude", 0);
         Log.e("LATLONG", "==> " + lat + "-" + lon);
 
-        if (Utils.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             getDailyWeather(lat, lon);
         }
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void getDailyWeather(double lat, double lon) {
+    private void getDailyWeather(double lat, double lon) {
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
         Call<OpenWeatherJSon> callCurrentLocation = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
         Call<OpenWeatherNextDaysJSon> callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(lat, lon, 7, getString(R.string.appid_weather));
@@ -76,12 +77,12 @@ public class MyNotifyService extends Service  {
             public void onResponse(Call<OpenWeatherNextDaysJSon> call, Response<OpenWeatherNextDaysJSon> response) {
                 OpenWeatherNextDaysJSon results = response.body();
 
-                String city = results.getCity().getName().toString();
-                String minTemp = format.format(results.getList().get(0).getTemp().getMin()-273.15)+"°";
-                String maxTemp = format.format(results.getList().get(0).getTemp().getMax()-273.15)+"°";
-                String mornTemp = format.format(results.getList().get(0).getTemp().getMorn()-273.15)+"°";
-                String eveTemp = format.format(results.getList().get(0).getTemp().getEve()-273.15)+"°";
-                String nightTemp = format.format(results.getList().get(0).getTemp().getNight()-273.15)+"°";
+                String city = results.getCity().getName();
+                String minTemp = format.format(results.getList().get(0).getTemp().getMin() - 273.15) + "°";
+                String maxTemp = format.format(results.getList().get(0).getTemp().getMax() - 273.15) + "°";
+                String mornTemp = format.format(results.getList().get(0).getTemp().getMorn() - 273.15) + "°";
+                String eveTemp = format.format(results.getList().get(0).getTemp().getEve() - 273.15) + "°";
+                String nightTemp = format.format(results.getList().get(0).getTemp().getNight() - 273.15) + "°";
                 double hum = results.getList().get(0).getHumidity();
 
                 notifyContent = city + " - " + maxTemp + "/" + minTemp + "\nMorn:" + mornTemp + " Eve:" + eveTemp + " Night:" + nightTemp;
@@ -103,18 +104,18 @@ public class MyNotifyService extends Service  {
             @Override
             public void onResponse(Call<OpenWeatherJSon> call, Response<OpenWeatherJSon> response) {
                 OpenWeatherJSon result = response.body();
-                String curTemp = format.format(result.getMain().getTemp()-273.15) + "°C";
+                String curTemp = format.format(result.getMain().getTemp() - 273.15) + "°C";
                 String curState = result.getWeather().get(0).getDescription();
                 notifyTitle = curTemp + " - " + curState;
                 Log.d("Check notify", notifyTitle + "-" + notifyContent);
 
-                String urlIcon = getString(R.string.base_icon_url)+result.getWeather().get(0).getIcon()+".png";
+                String urlIcon = getString(R.string.base_icon_url) + result.getWeather().get(0).getIcon() + ".png";
                 ImageLoader imageLoader = ImageLoader.getInstance();
                 imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
                 imageLoader.loadImage(urlIcon, new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        setNotifycation(loadedImage);
+                        setNotification(loadedImage);
                     }
                 });
             }
@@ -127,7 +128,7 @@ public class MyNotifyService extends Service  {
 
     }
 
-    public void setNotifycation(Bitmap myBitmap) {
+    private void setNotification(Bitmap myBitmap) {
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(this.getApplicationContext(), MainActivity.class);
@@ -135,22 +136,25 @@ public class MyNotifyService extends Service  {
         PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        Bitmap resized = Bitmap.createScaledBitmap(myBitmap, (int)(myBitmap.getWidth()*2), (int)(myBitmap.getHeight()*2), true);
+        Bitmap resized = Bitmap.createScaledBitmap(myBitmap, (int)(myBitmap.getWidth() * 2), (int)(myBitmap.getHeight() * 2), true);
 
-        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(this);
-        mNotifyBuilder.setSmallIcon(R.drawable.cloud32px);
-        mNotifyBuilder.setLargeIcon(resized);
-        mNotifyBuilder.setContentTitle(notifyTitle);
-        mNotifyBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notifyContent));
-        mNotifyBuilder.setContentText(notifyContent);
-        mNotifyBuilder.setSound(alarmSound);
-        mNotifyBuilder.setAutoCancel(true);
-        mNotifyBuilder.setWhen(when);
-        mNotifyBuilder.setContentIntent(pendingIntent);
-        mNotifyBuilder.build();
-        notificationManager.notify(0, mNotifyBuilder.getNotification());
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.cloud32px);
+        builder.setLargeIcon(resized);
+        builder.setContentTitle(notifyTitle);
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(notifyContent));
+        builder.setContentText(notifyContent);
+        builder.setSound(alarmSound);
+        builder.setAutoCancel(true);
+        builder.setWhen(when);
+        builder.setContentIntent(pendingIntent);
+        builder.build();
+        notificationManager.notify(0, builder.getNotification());
         Log.d("Service", "ACBDEFGHIJK");
     }
 
-
+    private boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
 }

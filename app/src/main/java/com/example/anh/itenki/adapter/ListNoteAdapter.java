@@ -47,8 +47,8 @@ public class ListNoteAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        if (convertView==null) {
+        ViewHolder holder;
+        if (convertView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
             convertView = inflater.inflate(R.layout.list_note_item, null);
             holder = new ViewHolder();
@@ -64,9 +64,9 @@ public class ListNoteAdapter extends BaseAdapter {
         Note note = list.get(position);
         holder.txtNoteContent.setText(note.getContent());
         if (note.getModifyTime().equalsIgnoreCase("")) {
-            holder.txtDateInfo.setText(note.getCreateTime());
+            holder.txtDateInfo.setText(context.getResources().getString(R.string.create_at) + ": " + note.getCreateTime());
         } else {
-            holder.txtDateInfo.setText(note.getModifyTime());
+            holder.txtDateInfo.setText(context.getResources().getString(R.string.modify_at) + ": " + note.getModifyTime());
         }
 
         return convertView;

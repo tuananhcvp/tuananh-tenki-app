@@ -20,7 +20,6 @@
         android:layout_height="1dp"
         android:background="#777777"
         />
-
     <TextView
         android:id="@+id/txtDateInfo"
         android:layout_width="wrap_content"

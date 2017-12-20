@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.dailyforecast.OpenWeatherDailyJSon;
 import com.example.anh.itenki.model.nextdaysforecast.ListItem;
 import com.example.anh.itenki.model.nextdaysforecast.OpenWeatherNextDaysJSon;
+import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
 import com.google.gson.Gson;
@@ -72,6 +74,12 @@ public class ForecastDetailActivity extends AppCompatActivity {
         if (selectedAddr != null) {
             txtSelectedAddr.setText(selectedAddr);
             swipeDetail.setRefreshing(true);
+            for (String city: MainActivity.japanCityList) {
+                if (city.equalsIgnoreCase(selectedAddr) && !selectedAddr.equalsIgnoreCase("Osaka")
+                        && !selectedAddr.equalsIgnoreCase("Tokyo") && !selectedAddr.equalsIgnoreCase("Kyoto")) {
+                    selectedAddr += "-ken";
+                }
+            }
             loadForecastDetail(TYPE_DAILY_NAME);
 
         } else if (curLocation != null) {
@@ -93,12 +101,21 @@ public class ForecastDetailActivity extends AppCompatActivity {
     }
 
     public void loadForecastDetail(int type) {
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
 
         switch (type) {
             case TYPE_DAILY_NAME:
-                Call<OpenWeatherDailyJSon> callDailyName = infoAPI.loadDailyWeatherByName(selectedAddr, getString(R.string.appid_weather));
-                Call<OpenWeatherNextDaysJSon> callNextDayName = infoAPI.loadNextDayWeatherByName(selectedAddr, getString(R.string.appid_weather));
+                Call<OpenWeatherDailyJSon> callDailyName;
+                Call<OpenWeatherNextDaysJSon> callNextDayName;
+
+                if (posLanguage == 1) {
+                    callDailyName = infoAPI.loadDailyWeatherByName(selectedAddr, "ja", getString(R.string.appid_weather));
+                    callNextDayName = infoAPI.loadNextDayWeatherByName(selectedAddr, "ja", getString(R.string.appid_weather));
+                } else {
+                    callDailyName = infoAPI.loadDailyWeatherByName(selectedAddr, getString(R.string.appid_weather));
+                    callNextDayName = infoAPI.loadNextDayWeatherByName(selectedAddr, getString(R.string.appid_weather));
+                }
 
                 callDailyName.enqueue(new Callback<OpenWeatherDailyJSon>() {
                     @Override
@@ -160,8 +177,16 @@ public class ForecastDetailActivity extends AppCompatActivity {
                 break;
 
             case TYPE_DAILY_LOCATION:
-                Call<OpenWeatherDailyJSon> callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
-                Call<OpenWeatherNextDaysJSon> callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
+                Call<OpenWeatherDailyJSon> callDailyLocation;
+                Call<OpenWeatherNextDaysJSon> callNextDayLocation;
+
+                if (posLanguage == 1) {
+                    callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, "ja", getString(R.string.appid_weather));
+                    callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, "ja", getString(R.string.appid_weather));
+                } else {
+                    callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
+                    callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
+                }
 
                 callDailyLocation.enqueue(new Callback<OpenWeatherDailyJSon>() {
                     @Override
@@ -194,10 +219,10 @@ public class ForecastDetailActivity extends AppCompatActivity {
                         swipeDetail.setEnabled(false);
 
                         for (int i = 0;i < 5;i++) {
-                            String tempMax = format.format(response.body().getList().get(i+1).getTemp().getMax()-273.15) + "°C";
-                            String tempMin = format.format(response.body().getList().get(i+1).getTemp().getMin()-273.15) + "°C";
+                            String tempMax = format.format(response.body().getList().get(i + 1).getTemp().getMax() - 273.15) + "°C";
+                            String tempMin = format.format(response.body().getList().get(i + 1).getTemp().getMin() - 273.15) + "°C";
                             arrNextDaysTemp[i] = tempMax + "/" + tempMin;
-                            urlNextDaysIcon[i] = response.body().getList().get(i+1).getWeather().get(0).getIcon();
+                            urlNextDaysIcon[i] = response.body().getList().get(i + 1).getWeather().get(0).getIcon();
                         }
 
                         NextDaysWeatherAdapter nextDaysAdapter = new NextDaysWeatherAdapter(ForecastDetailActivity.this, arrNextDays, arrNextDaysDate, urlNextDaysIcon, arrNextDaysTemp     );
@@ -207,7 +232,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
                         lvNextDayWeather.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                String date = arrNextDays[position]+"<"+arrNextDaysDate[position]+">";
+                                String date = arrNextDays[position] + "<" + arrNextDaysDate[position] + ">";
                                 showDailyWeatherDialog(weather, date, position);
                             }
                         });
@@ -249,43 +274,72 @@ public class ForecastDetailActivity extends AppCompatActivity {
         longitude = selectedAddrInt.getDoubleExtra("CurrentLongitude", 0);
     }
 
-    public void getArrDayOfWeek() {
+    private void getArrDayOfWeek() {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
 
         switch (day) {
             case Calendar.SUNDAY:
-                arrNextDays = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"月曜日", "火曜日", "水曜日", "木曜日", "金曜日"};
+                }
                 break;
 
             case Calendar.MONDAY:
-                arrNextDays = new String[]{"Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"火曜日", "水曜日", "木曜日", "金曜日", "土曜日"};
+                }
                 break;
 
             case Calendar.TUESDAY:
-                arrNextDays = new String[]{"Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"水曜日", "木曜日", "金曜日", "土曜日", "日曜日"};
+                }
                 break;
 
             case Calendar.WEDNESDAY:
-                arrNextDays = new String[]{"Thursday", "Friday", "Saturday", "Sunday", "Monday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Thursday", "Friday", "Saturday", "Sunday", "Monday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"木曜日", "金曜日", "土曜日", "日曜日", "月曜日"};
+                }
                 break;
 
             case Calendar.THURSDAY:
-                arrNextDays = new String[]{"Friday", "Saturday", "Sunday", "Monday", "Tuesday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Friday", "Saturday", "Sunday", "Monday", "Tuesday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"金曜日", "土曜日", "日曜日", "月曜日", "火曜日"};
+                }
                 break;
 
             case Calendar.FRIDAY:
-                arrNextDays = new String[]{"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"土曜日", "日曜日", "月曜日", "火曜日", "水曜日"};
+                }
                 break;
 
             case Calendar.SATURDAY:
-                arrNextDays = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"};
+                if (posLanguage == 0) {
+                    arrNextDays = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"};
+                } else if (posLanguage == 1) {
+                    arrNextDays = new String[]{"日曜日", "月曜日", "火曜日", "水曜日", "木曜日"};
+                }
                 break;
 
         }
     }
 
-    public void getArrDate() {
+    private void getArrDate() {
         for (int i = 1; i < 6; i++) {
             Calendar calendar = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -295,7 +349,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void showDailyWeatherDialog(OpenWeatherNextDaysJSon nextDaysJSon, String date, int i) {
+    private void showDailyWeatherDialog(OpenWeatherNextDaysJSon nextDaysJSon, String date, int i) {
         View v = this.getLayoutInflater().inflate(R.layout.next_days_weather_info, null);
 
         TextView tvDate = v.findViewById(R.id.tvDate);
@@ -310,21 +364,21 @@ public class ForecastDetailActivity extends AppCompatActivity {
         TextView tvHum = v.findViewById(R.id.tvHum);
         TextView tvPress = v.findViewById(R.id.tvPress);
 
-        ListItem item = nextDaysJSon.getList().get(i+1);
-        String tempDay = format.format(item.getTemp().getDay()-273.15)+"°C";
+        ListItem item = nextDaysJSon.getList().get(i + 1);
+        String tempDay = format.format(item.getTemp().getDay() - 273.15) + "°C";
         String state = item.getWeather().get(0).getDescription();
-        String tempMax = format.format(item.getTemp().getMax()-273.15)+"°C";
-        String tempMin = format.format(item.getTemp().getMin()-273.15)+"°C";
-        String tempMorn = format.format(item.getTemp().getMorn()-273.15)+"°C";
-        String tempEve = format.format(item.getTemp().getEve()-273.15)+"°C";
-        String tempNight = format.format(item.getTemp().getNight()-273.15)+"°C";
-        String wind = item.getSpeed()+"m/s";
-        String press = item.getPressure()+"hpa";
-        String hum = item.getHumidity()+"%";
+        String tempMax = format.format(item.getTemp().getMax() - 273.15) + "°C";
+        String tempMin = format.format(item.getTemp().getMin() - 273.15) + "°C";
+        String tempMorn = format.format(item.getTemp().getMorn() - 273.15) + "°C";
+        String tempEve = format.format(item.getTemp().getEve() - 273.15) + "°C";
+        String tempNight = format.format(item.getTemp().getNight() - 273.15) + "°C";
+        String wind = item.getSpeed() + "m/s";
+        String press = item.getPressure() + "hpa";
+        String hum = item.getHumidity() + "%";
         String urlIcon = item.getWeather().get(0).getIcon();
 
         tvDate.setText(date);
-        Glide.with(this).load(getString(R.string.base_icon_url)+urlIcon+".png").into(imgIconState);
+        Glide.with(this).load(getString(R.string.base_icon_url) + urlIcon + ".png").into(imgIconState);
         tvTemp.setText(tempDay);
         tvState.setText(state);
         tvMaxMinTemp.setText(tempMax + "/" + tempMin);
@@ -353,8 +407,14 @@ public class ForecastDetailActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float dp = 320f;
+        float fpixels = metrics.density * dp;
+        int pixels = (int) (fpixels + 0.5f);
+
         dialog.show();
-//        dialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(pixels, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
 }

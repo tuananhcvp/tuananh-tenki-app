@@ -38,6 +38,11 @@ public class SettingFragment extends Fragment {
     private Switch swtNotify;
     private Spinner spnLanguage;
 
+    /**
+     * SettingFragment initialize
+     *
+     * @return SettingFragment
+     */
     public static SettingFragment newInstance() {
         Bundle args = new Bundle();
         SettingFragment fragment = new SettingFragment();

@@ -43,10 +43,26 @@
     <string name="txt_english">English</string>
     <string name="txt_japan">Japanese</string>
     <string name="txt_title">Title</string>
+    <string name="txt_save">Save</string>
+    <string name="txt_clear">Clear</string>
+    <string name="txt_reload">Reload</string>
+    <string name="txt_yes">Yes</string>
+    <string name="txt_no">No</string>
 
-    <string name="create_at">Create at</string>
+    <string name="create_at">Created at</string>
     <string name="modify_at">Modified at</string>
+    <string name="alarm_at">Alarm time</string>
     <string name="note_saved">Note saved</string>
     <string name="search">Search</string>
+    <string name="set_alarm">Set alarm</string>
+    <string name="check_delete">Are you sure want to delete?</string>
+    <string name="select_action">Select the action</string>
+    <string name="delete_note">Delete note</string>
+    <string name="alarm_success">Alarm is set successfully!</string>
+    <string name="not_connect">Internet is not connected!</string>
+    <string name="input_address">Please input an address!</string>
+    <string name="create_note">Create note</string>
+    <string name="list_note">List note</string>
+    <string name="alarm_note">Alarm note</string>
 
 </resources>

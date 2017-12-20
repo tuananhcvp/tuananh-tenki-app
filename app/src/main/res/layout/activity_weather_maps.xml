@@ -28,7 +28,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:textColor="#000000"
-                android:text="Internet is not connected!"/>
+                android:text="@string/not_connect"/>
             <Button
                 android:id="@+id/btnReload"
                 android:layout_width="wrap_content"
@@ -37,16 +37,15 @@
                 android:minWidth="0dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="Reload"
-                style="@style/button"
-                />
+                android:text="@string/txt_reload"
+                style="@style/button" />
         </RelativeLayout>
         <Button
             android:id="@+id/btnFind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
-            android:text="Search"
+            android:text="@string/search"
             android:paddingLeft="5dp"
             android:onClick="findPlace"
             style="@style/button"/>

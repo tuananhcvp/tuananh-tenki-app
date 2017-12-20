@@ -58,6 +58,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,7 +94,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         Utils.initProgressDialog(WeatherMapsActivity.this, dialog);
     }
 
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -107,18 +107,28 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        btnReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Utils.isNetworkConnected(WeatherMapsActivity.this)) {
+                    layoutWarning.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    layoutWarning.setVisibility(RelativeLayout.GONE);
+                    initView();
+                }
+            }
+        });
+
         if (!Utils.isNetworkConnected(this)) {
-            Toast.makeText(getApplicationContext(), "Check your internet connection!", Toast.LENGTH_SHORT).show();
-            return;
+            Toasty.info(getApplicationContext(), getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
         } else {
             layoutWarning.setVisibility(RelativeLayout.GONE);
             initView();
-
         }
 
     }
 
-    public void initView() {
+    private void initView() {
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         hasGPS = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!hasGPS && SharedPreference.getInstance(this).getBoolean("isPermision",false)) {
@@ -159,7 +169,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void addEvent() {
-        if(mMap==null) return;
+        if(mMap == null) return;
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -199,7 +209,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         if (latLng != null) {
             float zoom = mMap.getCameraPosition().zoom;
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latLng.latitude+0.008, latLng.longitude))      // Sets the center of the map to location user
+                    .target(new LatLng(latLng.latitude + 0.008, latLng.longitude))      // Sets the center of the map to location user
                     .zoom(zoom)                                                         // Sets the zoom
                     .build();                                                           // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -208,7 +218,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    public void settingsRequest() {
+    private void settingsRequest() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(30 * 1000);
@@ -254,11 +264,11 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CHECK_SETTINGS) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
             SharedPreference.getInstance(this).putBoolean("isPermisionLocation",true);
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 dialog.show();
-                if(LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
+                if (LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();
                 }
@@ -289,6 +299,9 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Search Button onClick event
+     */
     public void findPlace(View view) {
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
@@ -310,7 +323,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         double lon = SplashScreenActivity.longitude;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat+0.008, lon))     // Sets the center of the map to location user
+                .target(new LatLng(lat + 0.008, lon))     // Sets the center of the map to location user
                 .zoom(15)                               // Sets the zoom
                 .build();                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -331,10 +344,17 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         startService(intent);
     }
 
-    public void loadCurrentWeatherByLocation(final double lat, final double lon) {
+    private void loadCurrentWeatherByLocation(final double lat, final double lon) {
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
 
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
-        Call<OpenWeatherJSon> callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+        Call<OpenWeatherJSon> callWeather;
+
+        if (posLanguage == 1) {
+            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+        } else {
+            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+        }
         // Cuộc gọi bất đồng bọ (chạy dưới background)
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {
             @Override

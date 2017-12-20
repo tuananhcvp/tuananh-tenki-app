@@ -17,6 +17,7 @@ import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
+import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
 import com.google.gson.Gson;
@@ -39,6 +40,11 @@ public class CurrentLocationFragment extends Fragment {
     private SwipeRefreshLayout swipeCurrent;
     private String curLocation = "";
 
+    /**
+     * CurrentLocationFragment initialize
+     *
+     * @return CurrentLocationFragment
+     */
     public static CurrentLocationFragment newInstance() {
         Bundle args = new Bundle();
         CurrentLocationFragment fragment = new CurrentLocationFragment();
@@ -113,9 +119,15 @@ public class CurrentLocationFragment extends Fragment {
 
     public void loadCurrentWeatherByLocation(double lat, double lon) {
         swipeCurrent.setRefreshing(true);
+        int posLanguage = SharedPreference.getInstance(getContext()).getInt("Language", 0);
 
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
-        Call<OpenWeatherJSon> callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+        Call<OpenWeatherJSon> callWeather;
+        if (posLanguage == 1) {
+            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, "ja", getString(R.string.appid_weather));
+        } else {
+            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+        }
         // Cuộc gọi bất đồng bọ (chạy dưới background)
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {
             @Override

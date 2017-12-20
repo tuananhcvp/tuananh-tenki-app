@@ -68,11 +68,10 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!Utils.isNetworkConnected(SelectedLocationWeatherActivity.this)) {
                     Toasty.info(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
-                    return;
                 } else {
                     if (!isDataEmpty) {
                         Intent detailIntent = new Intent(SelectedLocationWeatherActivity.this, ForecastDetailActivity.class);
-                        detailIntent.putExtra("SelectedAddress", selectedLocation);
+                        detailIntent.putExtra("SelectedAddress", getIntent().getStringExtra("SelectedAddress"));
                         startActivity(detailIntent);
                     } else {
                         swipeSelected.setRefreshing(false);
@@ -104,15 +103,28 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
     private void getWeatherByAddress() {
         Intent intent = getIntent();
         selectedLocation = intent.getStringExtra("SelectedAddress");
-        txtCurAddress.setText(selectedLocation);
+        for (String city: MainActivity.japanCityList) {
+            if (city.equalsIgnoreCase(selectedLocation) && !selectedLocation.equalsIgnoreCase("Osaka")
+                    && !selectedLocation.equalsIgnoreCase("Tokyo") && !selectedLocation.equalsIgnoreCase("Kyoto")) {
+                selectedLocation += "-ken";
+            }
+        }
         loadCurrentWeatherByCityName(selectedLocation);
     }
 
-    public void loadCurrentWeatherByCityName(String city) {
+    private void loadCurrentWeatherByCityName(String city) {
         swipeSelected.setRefreshing(true);
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
 
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
-        Call<OpenWeatherJSon> callWeather = infoAPI.loadCurrentWeatherByName(city, getString(R.string.appid_weather));
+        Call<OpenWeatherJSon> callWeather;
+
+        if (posLanguage == 1) {
+            callWeather = infoAPI.loadCurrentWeatherByName(city, "ja", getString(R.string.appid_weather));
+        } else {
+            callWeather = infoAPI.loadCurrentWeatherByName(city, getString(R.string.appid_weather));
+        }
+
         // Cuộc gọi bất đồng bọ (chạy dưới background)
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {
             @Override
@@ -126,6 +138,7 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
                     Utils.loadCurrentWeather(SelectedLocationWeatherActivity.this, openWeatherJSon);
                     swipeSelected.setRefreshing(false);
                     isDataEmpty = false;
+                    txtCurAddress.setText(getIntent().getStringExtra("SelectedAddress"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                     swipeSelected.setRefreshing(false);

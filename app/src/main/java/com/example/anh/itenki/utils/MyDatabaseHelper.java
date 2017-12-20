@@ -29,6 +29,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ALARM_ID = "AlarmNote_Id";
     private static final String COLUMN_ALARM_NOTECONTENT = "AlarmNote_Content";
     private static final String COLUMN_ALARM_TIME = "Alarm_Time";
+    private static final String COLUMN_ALARM_PENDING_ID = "Alarm_PendingId";
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +46,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         String createTableAlarm = "CREATE TABLE " + TABLE_ALARM + "("
                 + COLUMN_ALARM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_ALARM_NOTECONTENT + " TEXT,"
-                + COLUMN_ALARM_TIME + " TEXT" + ")";
+                + COLUMN_ALARM_TIME + " TEXT,"
+                + COLUMN_ALARM_PENDING_ID + " INTEGER" + ")";
         db.execSQL(createTableNote);
         db.execSQL(createTableAlarm);
     }
@@ -57,6 +59,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     *
+     */
     public void addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -71,6 +76,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     *
+     */
     public int updateNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -78,15 +86,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NOTE_CONTENT, note.getContent());
         values.put(COLUMN_NOTE_MODIFYTIME, note.getModifyTime());
 
-        return db.update(TABLE_NOTE, values, COLUMN_NOTE_ID+"=?", new String[]{String.valueOf(note.getId())});
+        return db.update(TABLE_NOTE, values, COLUMN_NOTE_ID + "=?", new String[]{String.valueOf(note.getId())});
     }
 
+    /**
+     *
+     */
     public void deleteNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NOTE, COLUMN_NOTE_ID+"=?", new String[]{String.valueOf(note.getId())});
+        db.delete(TABLE_NOTE, COLUMN_NOTE_ID + "=?", new String[]{String.valueOf(note.getId())});
         db.close();
     }
 
+    /**
+     *
+     */
     public List<Note> getAllNotes() {
         List<Note> noteList = new ArrayList<Note>();
         String selectQuery = "SELECT * FROM " + TABLE_NOTE;
@@ -103,9 +117,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 noteList.add(note);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return noteList;
     }
 
+    /**
+     *
+     */
     public List<Note> searchNote(String keyword) {
         List<Note> list = new ArrayList<Note>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -125,20 +143,28 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             list.add(note);
             c.moveToNext();
         }
+        c.close();
         return list;
     }
 
+    /**
+     *
+     */
     public void addAlarmNote(AlarmNote note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         
         values.put(COLUMN_ALARM_NOTECONTENT, note.getAlarmContent());
         values.put(COLUMN_ALARM_TIME, note.getAlarmTime());
+        values.put(COLUMN_ALARM_PENDING_ID, note.getPendingId());
 
         db.insert(TABLE_ALARM, null, values);
         db.close();
     }
 
+    /**
+     *
+     */
     public List<AlarmNote> getListAlarmNote() {
         List<AlarmNote> alarmList = new ArrayList<AlarmNote>();
         String query = "SELECT * FROM " + TABLE_ALARM;
@@ -150,16 +176,20 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 note.setAlarmId(Integer.parseInt(cursor.getString(0)));
                 note.setAlarmContent(cursor.getString(1));
                 note.setAlarmTime(cursor.getString(2));
+                note.setPendingId(Integer.parseInt(cursor.getString(3)));
                 alarmList.add(note);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         return alarmList;
     }
 
+    /**
+     *
+     */
     public void deleteAlarmNote(AlarmNote note) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ALARM, COLUMN_ALARM_ID+"=?", new String[]{String.valueOf(note.getAlarmId())});
+        db.delete(TABLE_ALARM, COLUMN_ALARM_ID + "=?", new String[]{String.valueOf(note.getAlarmId())});
         db.close();
     }
     

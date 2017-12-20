@@ -21,21 +21,43 @@ public interface WeatherInfoAPI {
     @GET("data/2.5/weather")
     Call<OpenWeatherJSon> loadCurrentWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("appid") String appid);
 
+    //When language = ja
+    @GET("data/2.5/weather")
+    Call<OpenWeatherJSon> loadCurrentWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("lang") String lang, @Query("appid") String appid);
+
     @GET("data/2.5/weather")
     Call<OpenWeatherJSon> loadCurrentWeatherByName(@Query("q") String name, @Query("appid") String appid);
+
+    //When language = ja
+    @GET("data/2.5/weather")
+    Call<OpenWeatherJSon> loadCurrentWeatherByName(@Query("q") String name, @Query("lang") String lang, @Query("appid") String appid);
 
     @GET("data/2.5/forecast")
     Call<OpenWeatherDailyJSon> loadDailyWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("appid") String appid);
 
+    //When language = ja
+    @GET("data/2.5/forecast")
+    Call<OpenWeatherDailyJSon> loadDailyWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("lang") String lang, @Query("appid") String appid);
+
     @GET("data/2.5/forecast")
     Call<OpenWeatherDailyJSon> loadDailyWeatherByName(@Query("q") String name, @Query("appid") String appid);
+
+    //When language = ja
+    @GET("data/2.5/forecast")
+    Call<OpenWeatherDailyJSon> loadDailyWeatherByName(@Query("q") String name, @Query("lang") String lang, @Query("appid") String appid);
 
     @GET("data/2.5/forecast/daily")
     Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("cnt") int cnt, @Query("appid") String appid);
 
+    //When language = ja
+    @GET("data/2.5/forecast/daily")
+    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("cnt") int cnt, @Query("lang") String lang, @Query("appid") String appid);
+
     @GET("data/2.5/forecast/daily")
     Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("appid") String appid);
 
-
+    //When language = ja
+    @GET("data/2.5/forecast/daily")
+    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("lang") String lang, @Query("appid") String appid);
 
 }

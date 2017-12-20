@@ -11,13 +11,14 @@ import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.anh.itenki.R;
-import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
 
 import java.text.DecimalFormat;
@@ -30,8 +31,12 @@ import java.util.Locale;
  */
 
 public class Utils {
+
+    /**
+     * Load curent weather
+     */
     public static void loadCurrentWeather(Activity activity, OpenWeatherJSon weatherJSon) {
-        if (weatherJSon==null) return;
+        if (weatherJSon == null) return;
         NumberFormat format = new DecimalFormat("#0.0");
 
         TextView tvCurLocation = (TextView)activity.findViewById(R.id.tvCurLocation);
@@ -46,31 +51,31 @@ public class Utils {
         TextView tvSunrise = (TextView)activity.findViewById(R.id.tvSunrise);
         TextView tvSunset = (TextView)activity.findViewById(R.id.tvSunset);
 
-        String curLocation = weatherJSon.getName().toString();
-        String temp = format.format(weatherJSon.getMain().getTemp()-273.15)+"°C";
-        String urlIconSky = activity.getString(R.string.base_icon_url)+weatherJSon.getWeather().get(0).getIcon()+".png";
-        String stateMain = weatherJSon.getWeather().get(0).getMain().toString();
-        String maxMinTemp = format.format(weatherJSon.getMain().getTemp_max()-273.15)+"°C/"+format.format(weatherJSon.getMain().getTemp_min()-273.15)+"°C";
-        String wind = weatherJSon.getWind().getSpeed()+"m/s";
-        String press = weatherJSon.getMain().getPressure()+"hpa";
-        String humidity = weatherJSon.getMain().getHumidity()+"%";
-        String state = weatherJSon.getWeather().get(0).getDescription().toString();
-        Date timeSunrise = new Date(weatherJSon.getSys().getSunrise()*1000);
-        String sunrise = timeSunrise.getHours()+":"+timeSunrise.getMinutes();
-        Date timeSunset = new Date(weatherJSon.getSys().getSunset()*1000);
-        String sunset = timeSunset.getHours()+":"+timeSunset.getMinutes();
+        String curLocation = weatherJSon.getName();
+        String temp = format.format(weatherJSon.getMain().getTemp() - 273.15) + "°C";
+        String urlIconSky = activity.getString(R.string.base_icon_url) + weatherJSon.getWeather().get(0).getIcon() + ".png";
+        String stateMain = weatherJSon.getWeather().get(0).getMain();
+        String maxMinTemp = format.format(weatherJSon.getMain().getTemp_max() - 273.15) + "°C/" + format.format(weatherJSon.getMain().getTemp_min() - 273.15) + "°C";
+        String wind = weatherJSon.getWind().getSpeed() + "m/s";
+        String press = weatherJSon.getMain().getPressure() + "hpa";
+        String humidity = weatherJSon.getMain().getHumidity() + "%";
+        String state = weatherJSon.getWeather().get(0).getDescription();
+        Date timeSunrise = new Date(weatherJSon.getSys().getSunrise() * 1000);
+        String sunrise = timeSunrise.getHours() + ":" + timeSunrise.getMinutes();
+        Date timeSunset = new Date(weatherJSon.getSys().getSunset() * 1000);
+        String sunset = timeSunset.getHours() + ":" + timeSunset.getMinutes();
 
         tvCurLocation.setText(curLocation);
         Glide.with(activity).load(urlIconSky).into(imgIconSky);
         tvTemp.setText(temp);
         tvStateMain.setText(stateMain);
         tvMaxMinTemp.setText(maxMinTemp);
-        tvWind.setText(activity.getResources().getString(R.string.txt_wind)+": "+wind);
-        tvPress.setText(activity.getResources().getString(R.string.txt_pressure)+": "+press);
-        tvHumidity.setText(activity.getResources().getString(R.string.txt_humidity)+": "+humidity);
-        tvState.setText(activity.getResources().getString(R.string.txt_state)+": "+state);
-        tvSunrise.setText(activity.getResources().getString(R.string.txt_sunrise)+": "+sunrise);
-        tvSunset.setText(activity.getResources().getString(R.string.txt_sunset)+": "+sunset);
+        tvWind.setText(activity.getResources().getString(R.string.txt_wind) + ": " + wind);
+        tvPress.setText(activity.getResources().getString(R.string.txt_pressure) + ": " + press);
+        tvHumidity.setText(activity.getResources().getString(R.string.txt_humidity) + ": " + humidity);
+        tvState.setText(activity.getResources().getString(R.string.txt_state) + ": " + state);
+        tvSunrise.setText(activity.getResources().getString(R.string.txt_sunrise) + ": " + sunrise);
+        tvSunset.setText(activity.getResources().getString(R.string.txt_sunset) + ": " + sunset);
     }
 
     public static boolean isNetworkConnected(Activity activity) {
@@ -78,12 +83,11 @@ public class Utils {
         return cm.getActiveNetworkInfo() != null;
     }
 
-    public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
-    }
-
+    /**
+     * Set actionbar title
+     */
     public static void setActionbarTitle(String title, Activity context, ActionBar actionBar) {
+        if (context == null || actionBar == null) return;
         TextView txtTitle = new TextView(context);
         RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         txtTitle.setLayoutParams(layoutparams);
@@ -98,6 +102,9 @@ public class Utils {
         actionBar.setCustomView(txtTitle);
     }
 
+    /**
+     * Initialize progressdialog
+     */
     public static void initProgressDialog(Activity context, ProgressDialog dialog) {
         dialog.setProgressStyle(android.R.style.Theme_Translucent_NoTitleBar);
 //        dialog.setTitle(ssTitle);
@@ -107,6 +114,9 @@ public class Utils {
         dialog.setIndeterminate(true);
     }
 
+    /**
+     * Set language
+     */
     public static void setLocaleLanguage(Context context, String lang) {
         Locale myLocale = new Locale(lang);
         Resources res = context.getResources();
@@ -114,6 +124,14 @@ public class Utils {
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
+    }
+
+    /**
+     * Hide soft keyboard
+     */
+    public static void hideSoftKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
 

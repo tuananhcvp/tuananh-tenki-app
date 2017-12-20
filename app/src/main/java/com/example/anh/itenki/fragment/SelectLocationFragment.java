@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SelectedLocationWeatherActivity;
+import com.example.anh.itenki.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,11 @@ public class SelectLocationFragment extends Fragment {
     private ArrayAdapter<String> adapterJapanCity = null;
     private View mainView;
 
+    /**
+     * SelectLocationFragment initialize
+     *
+     * @return SelectLocationFragment
+     */
     public static SelectLocationFragment newInstance() {
         Bundle args = new Bundle();
         SelectLocationFragment fragment = new SelectLocationFragment();
@@ -88,16 +94,14 @@ public class SelectLocationFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-//                InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                in.hideSoftInputFromWindow(mainView.getApplicationWindowToken(), 0);
+
             }
         });
 
         actvAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+                Utils.hideSoftKeyboard(getContext(), view);
             }
         });
 
@@ -117,12 +121,11 @@ public class SelectLocationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (actvAddress.getText().toString().equals("")) {
-                    Toasty.error(getActivity(), "Please input an address!", Toast.LENGTH_SHORT, true).show();
-                    return;
+                    Toasty.info(getActivity(), getResources().getString(R.string.input_address), Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent mIntent = new Intent(getActivity(), SelectedLocationWeatherActivity.class);
-                    mIntent.putExtra("SelectedAddress", actvAddress.getText().toString());
-                    startActivity(mIntent);
+                    Intent intent = new Intent(getActivity(), SelectedLocationWeatherActivity.class);
+                    intent.putExtra("SelectedAddress", actvAddress.getText().toString());
+                    startActivity(intent);
                 }
             }
         });

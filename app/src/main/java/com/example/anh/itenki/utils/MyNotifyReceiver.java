@@ -3,6 +3,7 @@ package com.example.anh.itenki.utils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 /**
@@ -20,13 +21,13 @@ public class MyNotifyReceiver extends BroadcastReceiver {
 
         if (checkState == null) {
             notifyState = "isSet";
-            if (Utils.isNetworkConnected(context)) {
+            if (isNetworkConnected(context)) {
                 context.startService(service);
                 Log.d("Notify State", notifyState);
             }
         } else if (checkState.equalsIgnoreCase("On")) {
             notifyState = "On";
-            if (Utils.isNetworkConnected(context)) {
+            if (isNetworkConnected(context)) {
                 context.startService(service);
                 Log.d("Notify State", notifyState);
             }
@@ -35,5 +36,10 @@ public class MyNotifyReceiver extends BroadcastReceiver {
             context.stopService(service);
             Log.d("Notify State", notifyState);
         }
+    }
+
+    private boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

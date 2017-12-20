@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.anh.itenki.R;
+import com.example.anh.itenki.fragment.AboutAppFragment;
 import com.example.anh.itenki.fragment.CurrentLocationFragment;
 import com.example.anh.itenki.fragment.NoteFragment;
 import com.example.anh.itenki.fragment.SelectLocationFragment;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
-    boolean hasGPS;
+    private boolean hasGPS;
     public BroadcastReceiver receiver = null;
     public static String[] country;
     public static String[] cityArr;
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity
 
     private NavigationView navigationView;
     private ProgressDialog dialog;
-    public static Point screenSize;
 
     public static final int NOTIFY_REQUEST_CODE = 1;
 
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         dialog = new ProgressDialog(this);
 
-        getScreenSize();
         getAllCityData();
         getJapanCityData();
         initGPS();
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_currentLocation) {
-            Log.d("Location","==> Lat:"+SplashScreenActivity.latitude+" -- Lon:"+SplashScreenActivity.longitude);
+            Log.d("Location","==> Lat:" + SplashScreenActivity.latitude + " -- Lon:" + SplashScreenActivity.longitude);
             navigationView.getMenu().getItem(0).setChecked(true);
             navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             callFragment(SelectLocationFragment.newInstance());
 
         } else if (id == R.id.nav_googleMap) {
-            Intent mapIntent = new Intent(this, WeatherMapsActivity.class);
+            Intent mapIntent = new Intent(MainActivity.this, WeatherMapsActivity.class);
             startActivity(mapIntent);
 
         } else if (id == R.id.nav_note) {
@@ -192,6 +191,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(3).setChecked(false);
             navigationView.getMenu().getItem(4).setChecked(false);
 
+            callFragment(AboutAppFragment.newInstance());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -200,18 +200,23 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+
     public void initService() {
         Intent intent = new Intent(MainActivity.this, LocationService.class);
         startService(intent);
     }
 
+    /**
+     * Stop location service
+     */
     public void stopService() {
         Intent intent = new Intent(MainActivity.this, LocationService.class);
         stopService(intent);
 
     }
 
-    public void settingsRequest() {
+    private void settingsRequest() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(30 * 1000);
@@ -285,13 +290,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CHECK_SETTINGS) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
             SharedPreference.getInstance(this).putBoolean("isPermisionLocation",true);
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Utils.initProgressDialog(MainActivity.this, dialog);
                 dialog.show();
 
-                if(LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
+                if (LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();
                 }
@@ -326,7 +331,7 @@ public class MainActivity extends AppCompatActivity
         initView();
     }
 
-    public void callFragment(Fragment fragment) {
+    private void callFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fmContent, fragment);
@@ -354,7 +359,7 @@ public class MainActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 Bundle extras = intent.getExtras();
                 final LatLng temp = new LatLng(extras.getDouble("Latitude"),extras.getDouble("Longitude"));
-                Log.d("inReceiver","Lat:"+temp.latitude+"--Lon:"+temp.longitude);
+                Log.d("inReceiver","Lat:" + temp.latitude + "--Lon:" + temp.longitude);
             }
         };
     }
@@ -388,7 +393,8 @@ public class MainActivity extends AppCompatActivity
         Utils.setActionbarTitle(title, this, getSupportActionBar());
     }
 
-    public void getJapanCityData() {
+    //Get cities in Japan from json file
+    private void getJapanCityData() {
         japanCityList = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(loadJSONFromAsset("japancity.json"));
@@ -402,10 +408,11 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         Collections.sort(japanCityList, String.CASE_INSENSITIVE_ORDER);
-        Log.e("JAPAN CITY", "==> "+new Gson().toJson(japanCityList));
+        Log.e("JAPAN CITY", "==> " + new Gson().toJson(japanCityList));
     }
 
-    public void getAllCityData() {
+    //Get cities in the world from json file
+    private void getAllCityData() {
         ArrayList<String> city = new ArrayList<>();
         try {
             JSONObject jsonRoot = new JSONObject(loadJSONFromAsset("cities.json"));
@@ -427,12 +434,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         cityArr = new String[city.size()];
-        for (int j=0;j<city.size();j++) {
+        for (int j = 0; j < city.size(); j++) {
             cityArr[j] = city.get(j);
         }
     }
 
-    public String loadJSONFromAsset(String file) {
+    private String loadJSONFromAsset(String file) {
         String json = null;
         try {
             InputStream is = this.getAssets().open(file);
@@ -448,13 +455,9 @@ public class MainActivity extends AppCompatActivity
         return json;
     }
 
-    private void getScreenSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenSize = size;
-    }
-
+    /**
+     * Refresh navigation view when language change
+     */
     public void refreshNavigationView() {
         this.setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

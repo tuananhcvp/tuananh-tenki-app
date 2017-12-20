@@ -48,11 +48,11 @@ public class ListAlarmNoteAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ListNoteAdapter.ViewHolder holder = null;
-        if (convertView==null) {
+        ListAlarmNoteAdapter.ViewHolder holder = null;
+        if (convertView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
             convertView = inflater.inflate(R.layout.list_note_item, null);
-            holder = new ListNoteAdapter.ViewHolder();
+            holder = new ListAlarmNoteAdapter.ViewHolder();
             holder.txtNoteContent = (TextView)convertView.findViewById(R.id.txtNoteContent);
             holder.txtDateInfo = (TextView)convertView.findViewById(R.id.txtDateInfo);
 
@@ -60,11 +60,11 @@ public class ListAlarmNoteAdapter extends BaseAdapter {
             convertView.setTag(R.id.txtNoteContent, holder.txtNoteContent);
             convertView.setTag(R.id.txtDateInfo, holder.txtDateInfo);
         } else {
-            holder = (ListNoteAdapter.ViewHolder)convertView.getTag();
+            holder = (ListAlarmNoteAdapter.ViewHolder)convertView.getTag();
         }
         AlarmNote note = list.get(position);
         holder.txtNoteContent.setText(note.getAlarmContent());
-        holder.txtDateInfo.setText(note.getAlarmTime());
+        holder.txtDateInfo.setText(context.getResources().getString(R.string.alarm_at) + ": " + note.getAlarmTime());
 
         return convertView;
     }
