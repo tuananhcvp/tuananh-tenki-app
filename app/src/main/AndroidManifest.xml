@@ -35,21 +35,35 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.SplashScreenActivity">
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SelectedLocationWeatherActivity" />
-        <activity android:name=".activity.ForecastDetailActivity" />
-        <activity android:name=".activity.AlarmActivity" />
 
         <activity
-            android:name=".activity.AlertAlarmNoteActivity">
+            android:name=".activity.SelectedLocationWeatherActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.ForecastDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.AlarmActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".activity.AlertAlarmNoteActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.anh.itenki.activity.alertalarmnoteActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -75,7 +89,8 @@
 
         <activity
             android:name=".activity.WeatherMapsActivity"
-            android:label="@string/title_activity_weather_maps"/>
+            android:label="@string/title_activity_weather_maps"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".utils.MyNotifyService"

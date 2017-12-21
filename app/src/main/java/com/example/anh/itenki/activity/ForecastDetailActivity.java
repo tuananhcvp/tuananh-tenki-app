@@ -116,6 +116,8 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     callDailyName = infoAPI.loadDailyWeatherByName(selectedAddr, getString(R.string.appid_weather));
                     callNextDayName = infoAPI.loadNextDayWeatherByName(selectedAddr, getString(R.string.appid_weather));
                 }
+                Log.i("OkHttp", "==> " + callDailyName.request().url().toString());
+                Log.i("OkHttp", "==> " + callNextDayName.request().url().toString());
 
                 callDailyName.enqueue(new Callback<OpenWeatherDailyJSon>() {
                     @Override
@@ -187,6 +189,8 @@ public class ForecastDetailActivity extends AppCompatActivity {
                     callDailyLocation = infoAPI.loadDailyWeatherByLocation(latitude, longitude, getString(R.string.appid_weather));
                     callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(latitude, longitude, 7, getString(R.string.appid_weather));
                 }
+                Log.i("OkHttp", "==> " + callDailyLocation.request().url().toString());
+                Log.i("OkHttp", "==> " + callNextDayLocation.request().url().toString());
 
                 callDailyLocation.enqueue(new Callback<OpenWeatherDailyJSon>() {
                     @Override

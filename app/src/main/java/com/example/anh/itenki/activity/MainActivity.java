@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(30 * 1000);
-        locationRequest.setFastestInterval(1 * 1000);
+        locationRequest.setFastestInterval(1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true); //this is the key ingredient
@@ -258,13 +258,16 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     *
+     */
     @TargetApi(Build.VERSION_CODES.M)
     public void initView() {
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
         hasGPS = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!hasGPS && SharedPreference.getInstance(this).getBoolean("isPermision",false)) {
             if (LocationService.mGoogleApiClient != null) {
-                if(!LocationService.mGoogleApiClient.isConnecting() && !LocationService.mGoogleApiClient.isConnected()) {
+                if (!LocationService.mGoogleApiClient.isConnecting() && !LocationService.mGoogleApiClient.isConnected()) {
                     LocationService.mGoogleApiClient.connect();
                 }
             }
@@ -338,6 +341,9 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    /**
+     *
+     */
     @TargetApi(Build.VERSION_CODES.M)
     public void initGPS() {
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
@@ -382,8 +388,6 @@ public class MainActivity extends AppCompatActivity
                 this.unregisterReceiver(receiver);
                 receiver = null;
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -423,8 +427,8 @@ public class MainActivity extends AppCompatActivity
                 country[i] = listCountryArr.getString(i);
             }
 
-            for (int k = 0; k < country.length; k++) {
-                JSONArray jsonArray = jsonRoot.getJSONArray(country[k]);
+            for (String c : country) {
+                JSONArray jsonArray = jsonRoot.getJSONArray(c);
                 for (int m = 0; m < jsonArray.length(); m++) {
                     city.add(jsonArray.getString(m));
                 }

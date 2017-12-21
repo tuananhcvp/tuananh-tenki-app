@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.MainActivity;
@@ -43,6 +44,12 @@ public class AboutAppFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about_app, container, false);
+
+        TextView tvAppName = (TextView)v.findViewById(R.id.tvAppName);
+        TextView tvVersion = (TextView)v.findViewById(R.id.tvVersion);
+
+        tvAppName.setText(getResources().getString(R.string.txt_app_name) + ": " + getResources().getString(R.string.app_name));
+        tvVersion.setText(getResources().getString(R.string.txt_version));
 
         return v;
     }

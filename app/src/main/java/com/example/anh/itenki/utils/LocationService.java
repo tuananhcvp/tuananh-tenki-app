@@ -23,7 +23,8 @@ import com.google.android.gms.location.LocationServices;
  * Created by anh on 2017/12/06.
  */
 
-public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
     public static GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mLastLocation;
@@ -43,8 +44,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             try {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (mLastLocation != null) {
-                    Log.d("LocationService.class","Longitude: "+mLastLocation.getLongitude());
-                    Log.d("LocationService.class","Latitude: "+mLastLocation.getLatitude());
+                    Log.d("LocationService.class","Longitude: " + mLastLocation.getLongitude());
+                    Log.d("LocationService.class","Latitude: " + mLastLocation.getLatitude());
                     SplashScreenActivity.latitude = mLastLocation.getLatitude();
                     SplashScreenActivity.longitude = mLastLocation.getLongitude();
                     SharedPreference.getInstance(this).putDouble("latitude", SplashScreenActivity.latitude);
@@ -79,7 +80,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onCreate() {
 
-        if(intent==null) intent = new Intent(BROADCAST_ACTION);
+        if (intent == null) intent = new Intent(BROADCAST_ACTION);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -97,7 +98,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         Log.d("LocationService.class","service starting");
-        if(!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
+        if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
             Log.e("mGoogleApiClient","==> Connect");
             mGoogleApiClient.connect();
         }
@@ -130,19 +131,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onLocationChanged(Location location) {
 
-        if(mLastLocation==null) {
+        if (mLastLocation == null) {
             mLastLocation = location;
             intent.putExtra("Latitude", mLastLocation.getLatitude());
             intent.putExtra("Longitude", mLastLocation.getLongitude());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             sendBroadcast(intent);
         }
-        if((mLastLocation.getLatitude()!=location.getLatitude()&&(mLastLocation.getLongitude()!=location.getLongitude()))) {
+        if ((mLastLocation.getLatitude() != location.getLatitude() && (mLastLocation.getLongitude() != location.getLongitude()))) {
             mLastLocation = location;
-            if (mLastLocation!=null) {
-                SplashScreenActivity.latitude = mLastLocation.getLatitude();
-                SplashScreenActivity.longitude = mLastLocation.getLongitude();
-            }
+            SplashScreenActivity.latitude = mLastLocation.getLatitude();
+            SplashScreenActivity.longitude = mLastLocation.getLongitude();
         }
 
     }

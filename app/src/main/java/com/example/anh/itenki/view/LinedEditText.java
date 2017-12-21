@@ -16,7 +16,9 @@ public class LinedEditText extends EditText {
     private Rect rect;
     private Paint paint;
 
-
+    /**
+     * Init LinedEditText
+     */
     public LinedEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
 

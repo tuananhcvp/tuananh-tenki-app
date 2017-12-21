@@ -38,7 +38,7 @@ public class AlarmNoteDialogFragment extends DialogFragment {
 
         Uri notify = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         mp = MediaPlayer.create(getContext(), notify);
-//        mp.start();
+        mp.start();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("");

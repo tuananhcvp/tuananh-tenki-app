@@ -29,7 +29,7 @@
     <string name="title_current_location">現在位置</string>
     <string name="title_select_location">都道府県選択</string>
     <string name="title_selected_city">選択した市</string>
-    <string name="title_google_map">Google マップ</string>
+    <string name="title_google_map">Googleマップ</string>
     <string name="title_setting">設定</string>
     <string name="title_tenki_note">メモ</string>
     <string name="title_introduction">紹介</string>
@@ -47,8 +47,10 @@
     <string name="txt_save">保存</string>
     <string name="txt_clear">削除</string>
     <string name="txt_reload">リロード</string>
-    <string name="txt_yes">Yes</string>
-    <string name="txt_no">No</string>
+    <string name="txt_yes">はい</string>
+    <string name="txt_no">いいえ</string>
+    <string name="txt_app_name">アプリ名</string>
+    <string name="txt_version">バージョン: 1.0</string>
 
     <string name="create_at">作成時間</string>
     <string name="modify_at">編集時間</string>

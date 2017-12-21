@@ -133,7 +133,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         hasGPS = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!hasGPS && SharedPreference.getInstance(this).getBoolean("isPermision",false)) {
             if (LocationService.mGoogleApiClient != null) {
-                if(!LocationService.mGoogleApiClient.isConnecting() && !LocationService.mGoogleApiClient.isConnected()) {
+                if (!LocationService.mGoogleApiClient.isConnecting() && !LocationService.mGoogleApiClient.isConnected()) {
                     LocationService.mGoogleApiClient.connect();
                 }
             }
@@ -169,7 +169,9 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void addEvent() {
-        if(mMap == null) return;
+        if (mMap == null) {
+            return;
+        }
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -177,6 +179,13 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                 if (!Utils.isNetworkConnected(WeatherMapsActivity.this)) {
                     layoutWarning.setVisibility(RelativeLayout.VISIBLE);
                 } else {
+                    if (listMarker.size() > 4) {
+                        listMarker.get(0).setVisible(false);
+                        markerInfo.remove(listMarker.get(0));
+                        markerBitmap.remove(listMarker.get(0));
+                        listMarker.remove(0);
+                    }
+
                     layoutWarning.setVisibility(RelativeLayout.GONE);
                     moveAndShowWeatherNewPlace(latLng);
                 }
@@ -306,9 +315,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
             startActivityForResult(intent, REQUEST_FIND_PLACE);
-        } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
-        } catch (GooglePlayServicesNotAvailableException e) {
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             // TODO: Handle the error.
         }
         if (!Utils.isNetworkConnected(this)) {
@@ -323,7 +330,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         double lon = SplashScreenActivity.longitude;
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat + 0.008, lon))     // Sets the center of the map to location user
+                .target(new LatLng(lat + 0.008, lon))   // Sets the center of the map to location user
                 .zoom(15)                               // Sets the zoom
                 .build();                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -355,6 +362,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         } else {
             callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
         }
+        Log.i("OkHttp", "==> " + callWeather.request().url().toString());
         // Cuộc gọi bất đồng bọ (chạy dưới background)
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {
             @Override
@@ -363,11 +371,11 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                     dialog.dismiss();
                     JSONObject jsonObject = new JSONObject(new Gson().toJson(response));
                     String weatherJSon = jsonObject.get("body").toString();
-                    Log.d("Response","==> "+weatherJSon);
+                    Log.d("Response","==> " + weatherJSon);
                     final OpenWeatherJSon openWeatherJSon = new Gson().fromJson(weatherJSon, new TypeToken<OpenWeatherJSon>(){}.getType());
-                    Log.d("openWeatherJSon","==> "+new Gson().toJson(openWeatherJSon));
+                    Log.d("openWeatherJSon","==> " + new Gson().toJson(openWeatherJSon));
 
-                    String urlIcon = getString(R.string.base_icon_url)+openWeatherJSon.getWeather().get(0).getIcon()+".png";
+                    String urlIcon = getString(R.string.base_icon_url) + openWeatherJSon.getWeather().get(0).getIcon() + ".png";
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
                     imageLoader.loadImage(urlIcon, new SimpleImageLoadingListener() {
@@ -383,6 +391,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                             listMarker.add(marker);
                             markerInfo.put(marker, openWeatherJSon);
                             markerBitmap.put(marker, loadedImage);
+                            Log.e("NumberOfMarkerAfterDel", ": " + listMarker.size() + "-" + markerInfo.size() + "-" + markerBitmap.size());
                             marker.showInfoWindow();
                         }
                     }) ;

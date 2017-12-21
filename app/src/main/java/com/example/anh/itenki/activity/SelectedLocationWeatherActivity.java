@@ -124,6 +124,7 @@ public class SelectedLocationWeatherActivity extends AppCompatActivity {
         } else {
             callWeather = infoAPI.loadCurrentWeatherByName(city, getString(R.string.appid_weather));
         }
+        Log.i("OkHttp", "==> " + callWeather.request().url().toString());
 
         // Cuộc gọi bất đồng bọ (chạy dưới background)
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {

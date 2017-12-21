@@ -39,7 +39,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Utils.setLocaleLanguage(this, "ja");
         }
 
-        if(Utils.isNetworkConnected(this)) {
+        if (Utils.isNetworkConnected(this)) {
             splash();
         } else {
             Toasty.info(getApplicationContext(), getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
@@ -50,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Utils.isNetworkConnected(SplashScreenActivity.this) && !_active) {
+                if (Utils.isNetworkConnected(SplashScreenActivity.this) && !_active) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -69,8 +69,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
 
-    public void splash() {
-        Thread splashThread = new Thread(){
+    private void splash() {
+        Thread splashThread = new Thread() {
             @Override
             public void run() {
                 try {
