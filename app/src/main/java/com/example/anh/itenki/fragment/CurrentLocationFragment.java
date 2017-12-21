@@ -76,6 +76,11 @@ public class CurrentLocationFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        if (SplashScreenActivity.latitude == 0 && SplashScreenActivity.longitude == 0) {
+            SplashScreenActivity.latitude = SharedPreference.getInstance(getContext()).getDouble("latitude", 0);
+            SplashScreenActivity.longitude = SharedPreference.getInstance(getContext()).getDouble("longitude", 0);
+        }
+
         loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
 
         swipeCurrent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

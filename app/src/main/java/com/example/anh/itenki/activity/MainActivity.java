@@ -110,9 +110,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
-            callFragment(CurrentLocationFragment.newInstance());
-        }
+//        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
+//            callFragment(CurrentLocationFragment.newInstance());
+//        }
+        initView();
 
     }
 
@@ -272,6 +273,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             settingsRequest();
+        } else {
+            callFragment(CurrentLocationFragment.newInstance());
         }
 
     }
@@ -331,7 +334,7 @@ public class MainActivity extends AppCompatActivity
 //        filter.addAction(LocationService.BROADCAST_ACTION);
 //        registerReceiver(receiver, filter);
 
-        initView();
+//        initView();
     }
 
     private void callFragment(Fragment fragment) {
@@ -374,8 +377,11 @@ public class MainActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
         stopService();
-        SharedPreference.getInstance(this).putDouble("latitude", SplashScreenActivity.latitude);
-        SharedPreference.getInstance(this).putDouble("longitude", SplashScreenActivity.longitude);
+        Log.d("onPause", "=> " + SplashScreenActivity.latitude + "-" + SplashScreenActivity.longitude);
+        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
+            SharedPreference.getInstance(this).putDouble("latitude", SplashScreenActivity.latitude);
+            SharedPreference.getInstance(this).putDouble("longitude", SplashScreenActivity.longitude);
+        }
     }
 
 
