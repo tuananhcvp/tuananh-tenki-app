@@ -25,6 +25,9 @@ import com.example.anh.itenki.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -32,13 +35,19 @@ import es.dmoral.toasty.Toasty;
  */
 
 public class SelectLocationFragment extends Fragment {
-    private Button btnSeeWeather;
-    private AutoCompleteTextView actvAddress;
-    private ListView lvJapanCity;
-
     private ArrayAdapter<String> adapterCity = null;
     private ArrayAdapter<String> adapterJapanCity = null;
-    private View mainView;
+    private Unbinder unbinder;
+
+    @BindView(R.id.actvAddress)
+    AutoCompleteTextView actvAddress;
+
+    @BindView(R.id.btnSeeWeather)
+    Button btnSeeWeather;
+
+    @BindView(R.id.lvJapanCity)
+    ListView lvJapanCity;
+
 
     /**
      * SelectLocationFragment initialize
@@ -65,13 +74,11 @@ public class SelectLocationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_select_location, container, false);
+        View v = inflater.inflate(R.layout.fragment_select_location, container, false);
 
-        actvAddress = (AutoCompleteTextView)mainView.findViewById(R.id.actvAddress);
-        btnSeeWeather = (Button)mainView.findViewById(R.id.btnSeeWeather);
-        lvJapanCity = (ListView)mainView.findViewById(R.id.lvJapanCity);
+        ButterKnife.bind(this, v);
 
-        return mainView;
+        return v;
     }
 
     @Override
@@ -130,6 +137,13 @@ public class SelectLocationFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // unbind the view to free some memory
+        unbinder.unbind();
     }
 
 }

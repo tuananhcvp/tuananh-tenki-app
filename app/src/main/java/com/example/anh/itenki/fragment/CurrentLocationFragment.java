@@ -2,6 +2,7 @@ package com.example.anh.itenki.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.ForecastDetailActivity;
@@ -17,6 +17,7 @@ import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SplashScreenActivity;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
+import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
@@ -26,7 +27,9 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import es.dmoral.toasty.Toasty;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,9 +39,14 @@ import retrofit2.Response;
  */
 
 public class CurrentLocationFragment extends Fragment {
-    private Button btnDetail;
-    private SwipeRefreshLayout swipeCurrent;
     private String curLocation = "";
+    private Unbinder unbinder;
+
+    @BindView(R.id.btnDetail)
+    Button btnDetail;
+
+    @BindView(R.id.swipeCurrent)
+    SwipeRefreshLayout swipeCurrent;
 
     /**
      * CurrentLocationFragment initialize
@@ -55,20 +63,28 @@ public class CurrentLocationFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (SplashScreenActivity.latitude == 0 && SplashScreenActivity.longitude == 0) {
+            if (LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
+                Log.e("mGoogleApiClient","==> Disconnect");
+                LocationService.mGoogleApiClient.disconnect();
+            }
+            initService();
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity) getActivity()).setActionBarName(getResources().getString(R.string.title_current_location));
+        ((MainActivity) getActivity()).setActionBarName(getString(R.string.title_current_location));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_current_location, container, false);
 
-        btnDetail = v.findViewById(R.id.btnDetail);
-        swipeCurrent = v.findViewById(R.id.swipeCurrent);
+        unbinder = ButterKnife.bind(this, v);
+
         return v;
     }
 
@@ -77,18 +93,24 @@ public class CurrentLocationFragment extends Fragment {
         super.onStart();
 
         if (SplashScreenActivity.latitude == 0 && SplashScreenActivity.longitude == 0) {
-            SplashScreenActivity.latitude = SharedPreference.getInstance(getContext()).getDouble("latitude", 0);
-            SplashScreenActivity.longitude = SharedPreference.getInstance(getContext()).getDouble("longitude", 0);
+            swipeCurrent.setRefreshing(true);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+                }
+            }, 1000);
+        } else {
+            loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
         }
-
-        loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
 
         swipeCurrent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!Utils.isNetworkConnected(getActivity())) {
                     swipeCurrent.setRefreshing(false);
-                    Toasty.info(getContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
+                    showToastCheckInternet();
                 } else {
                     loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
                 }
@@ -99,7 +121,7 @@ public class CurrentLocationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!Utils.isNetworkConnected(getActivity())) {
-                    Toasty.info(getContext(), getString(R.string.check_internet), Toast.LENGTH_SHORT, true).show();
+                    showToastCheckInternet();
                 } else {
                     if (!curLocation.equalsIgnoreCase("")) {
                         Intent detailIntent = new Intent(getActivity(), ForecastDetailActivity.class);
@@ -108,7 +130,7 @@ public class CurrentLocationFragment extends Fragment {
                         detailIntent.putExtra("CurrentAddressName", curLocation);
                         startActivity(detailIntent);
                     } else {
-                        Toasty.info(getContext(), getString(R.string.check_data_not_found), Toast.LENGTH_SHORT, true).show();
+                        Utils.showToastNotify(getContext(), getString(R.string.check_data_not_found));
                     }
 
                 }
@@ -122,7 +144,7 @@ public class CurrentLocationFragment extends Fragment {
 
     }
 
-    public void loadCurrentWeatherByLocation(double lat, double lon) {
+    private void loadCurrentWeatherByLocation(double lat, double lon) {
         swipeCurrent.setRefreshing(true);
         int posLanguage = SharedPreference.getInstance(getContext()).getInt("Language", 0);
 
@@ -141,9 +163,9 @@ public class CurrentLocationFragment extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(new Gson().toJson(response));
                     String weatherJSon = jsonObject.get("body").toString();
-                    Log.d("Response","==> "+weatherJSon);
+                    Log.d("Response","==> " + weatherJSon);
                     OpenWeatherJSon openWeatherJSon = new Gson().fromJson(weatherJSon, new TypeToken<OpenWeatherJSon>(){}.getType());
-                    Log.d("openWeatherJSon","==> "+new Gson().toJson(openWeatherJSon));
+                    Log.d("openWeatherJSon","==> " + new Gson().toJson(openWeatherJSon));
                     curLocation = openWeatherJSon.getName();
                     Utils.loadCurrentWeather(getActivity(), openWeatherJSon);
                     swipeCurrent.setRefreshing(false);
@@ -159,6 +181,22 @@ public class CurrentLocationFragment extends Fragment {
             }
         });
 
+    }
+
+    public void initService() {
+        Intent intent = new Intent(getActivity(), LocationService.class);
+        getActivity().startService(intent);
+    }
+
+    private void showToastCheckInternet() {
+        Utils.showToastNotify(getContext(), getString(R.string.check_internet));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // unbind the view to free some memory
+        unbinder.unbind();
     }
 }
 

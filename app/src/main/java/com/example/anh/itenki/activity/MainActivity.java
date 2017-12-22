@@ -201,8 +201,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     public void initService() {
         Intent intent = new Intent(MainActivity.this, LocationService.class);
         startService(intent);
@@ -301,7 +299,6 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Utils.initProgressDialog(MainActivity.this, dialog);
                 dialog.show();
-
                 if (LocationService.mGoogleApiClient.isConnecting() || LocationService.mGoogleApiClient.isConnected()) {
                     Log.e("mGoogleApiClient","==> Disconnect");
                     LocationService.mGoogleApiClient.disconnect();

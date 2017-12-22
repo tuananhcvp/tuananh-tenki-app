@@ -20,7 +20,8 @@ import es.dmoral.toasty.Toasty;
 public class SplashScreenActivity extends AppCompatActivity {
     private boolean _active = false;
     private int _splashTime = 2500;
-    public static double latitude, longitude;
+    public static double latitude;
+    public static double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

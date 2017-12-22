@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.anh.itenki.R;
@@ -25,6 +26,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Created by anh on 2017/12/06.
@@ -132,6 +135,13 @@ public class Utils {
     public static void hideSoftKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     *
+     */
+    public static void showToastNotify(Context context, String content) {
+        Toasty.info(context, content, Toast.LENGTH_SHORT, true).show();
     }
 }
 
