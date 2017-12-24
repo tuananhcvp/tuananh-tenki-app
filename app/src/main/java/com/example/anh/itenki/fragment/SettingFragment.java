@@ -28,6 +28,10 @@ import com.example.anh.itenki.utils.SharedPreference;
 
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 import static com.example.anh.itenki.utils.Utils.setLocaleLanguage;
 
 /**
@@ -35,8 +39,13 @@ import static com.example.anh.itenki.utils.Utils.setLocaleLanguage;
  */
 
 public class SettingFragment extends Fragment {
-    private Switch swtNotify;
-    private Spinner spnLanguage;
+    @BindView(R.id.swtNotify)
+    Switch swtNotify;
+
+    @BindView(R.id.spnLanguage)
+    Spinner spnLanguage;
+
+    private Unbinder unbinder;
 
     /**
      * SettingFragment initialize
@@ -65,8 +74,7 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        swtNotify = (Switch) v.findViewById(R.id.swtNotify);
-        spnLanguage = (Spinner) v.findViewById(R.id.spnLanguage);
+        unbinder = ButterKnife.bind(this, v);
 
         return v;
     }
@@ -169,4 +177,10 @@ public class SettingFragment extends Fragment {
         ((MainActivity) getActivity()).setActionBarName(getResources().getString(R.string.title_setting));
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // unbind the view to free some memory
+        unbinder.unbind();
+    }
 }

@@ -76,7 +76,7 @@ public class SelectLocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_select_location, container, false);
 
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
 
         return v;
     }

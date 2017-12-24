@@ -20,6 +20,9 @@ import com.example.anh.itenki.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -33,10 +36,19 @@ public class CreateNoteFragment extends Fragment {
     private int mode;
     private boolean isInitialize = false;
 
-    private EditText edtContent;
-    private TextView txtNoteTime;
-    private Button btnSave;
-    private Button btnCancel;
+    @BindView(R.id.edtContent)
+    EditText edtContent;
+
+    @BindView(R.id.txtNoteTime)
+    TextView txtNoteTime;
+
+    @BindView(R.id.btnSave)
+    Button btnSave;
+
+    @BindView(R.id.btnCancel)
+    Button btnCancel;
+
+    private Unbinder unbinder;
 
     /**
      * CreateNoteFragment initialize
@@ -89,12 +101,8 @@ public class CreateNoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e("CreateNoteFrag", "==> onCreateView");
         isInitialize = true;
-
         View v = inflater.inflate(R.layout.fragment_create_note, container, false);
-        edtContent = (EditText) v.findViewById(R.id.edtContent);
-        txtNoteTime = (TextView) v.findViewById(R.id.txtNoteTime);
-        btnSave = (Button) v.findViewById(R.id.btnSave);
-        btnCancel = (Button) v.findViewById(R.id.btnCancel);
+        unbinder = ButterKnife.bind(this, v);
 
         return v;
     }
@@ -184,13 +192,6 @@ public class CreateNoteFragment extends Fragment {
         isInitialize = false;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("CreateNoteFrag", "==> onDestroyView");
-
-    }
-
     /**
      * Show note's content
      */
@@ -216,5 +217,13 @@ public class CreateNoteFragment extends Fragment {
             txtNoteTime.setText(getResources().getString(R.string.alarm_at) + ": " + alarmNote.getAlarmTime());
             edtContent.setText(alarmNote.getAlarmContent());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("CreateNoteFrag", "==> onDestroyView");
+        // unbind the view to free some memory
+        unbinder.unbind();
     }
 }
