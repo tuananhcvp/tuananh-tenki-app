@@ -2,14 +2,12 @@ package com.example.anh.itenki.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -110,9 +107,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-//        if (SplashScreenActivity.latitude != 0 && SplashScreenActivity.longitude != 0) {
-//            callFragment(CurrentLocationFragment.newInstance());
-//        }
         initView();
 
     }

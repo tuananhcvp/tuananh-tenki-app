@@ -157,14 +157,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
 
             addEvent();
 
-//            GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-//                @Override
-//                public void onMyLocationChange(Location location) {
-//                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-//                }
-//            };
-//            mMap.setOnMyLocationChangeListener(myLocationChangeListener);
         }
     }
 
@@ -231,7 +223,7 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(30 * 1000);
-        locationRequest.setFastestInterval(1 * 1000);
+        locationRequest.setFastestInterval(1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true); //this is the key ingredient
@@ -335,14 +327,6 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
                 .build();                               // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
-//            }
-//        }, 1000);  //Do something after 1000ms
-
         loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
     }
 
@@ -358,12 +342,12 @@ public class WeatherMapsActivity extends FragmentActivity implements OnMapReadyC
         Call<OpenWeatherJSon> callWeather;
 
         if (posLanguage == 1) {
-            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+            callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, "ja", getString(R.string.appid_weather));
         } else {
             callWeather = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
         }
         Log.i("OkHttp", "==> " + callWeather.request().url().toString());
-        // Cuộc gọi bất đồng bọ (chạy dưới background)
+
         callWeather.enqueue(new Callback<OpenWeatherJSon>() {
             @Override
             public void onResponse(Call<OpenWeatherJSon> call, Response<OpenWeatherJSon> response) {

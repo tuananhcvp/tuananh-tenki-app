@@ -48,8 +48,10 @@ public class ForecastDetailActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeDetail;
     private ListView lvNextDayWeather;
 
-    private String selectedAddr, curLocation;
-    private double latitude, longitude;
+    private String selectedAddr;
+    private String curLocation;
+    private double latitude;
+    private double longitude;
 
     private NumberFormat format = new DecimalFormat("#0.0");
     private String[] arrDailyTime = {"6AM", "9AM", "12AM", "3PM", "6PM", "9PM", "12PM", "3AM"};
@@ -258,7 +260,7 @@ public class ForecastDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void init() {
+    private void init() {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -397,12 +399,6 @@ public class ForecastDetailActivity extends AppCompatActivity {
         builder.setTitle("");
         builder.setView(v);
         builder.setCancelable(true);
-//        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                dialogInterface.cancel();
-//            }
-//        });
 
         final AlertDialog dialog = builder.create();
         v.setOnClickListener(new View.OnClickListener() {

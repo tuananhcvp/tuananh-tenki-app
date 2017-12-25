@@ -36,7 +36,6 @@ import retrofit2.Response;
  */
 
 public class MyNotifyService extends Service  {
-    private Bitmap myBitmap;
     private String notifyTitle = "";
     private String notifyContent = "";
     private NumberFormat format = new DecimalFormat("#0.0");
@@ -68,9 +67,18 @@ public class MyNotifyService extends Service  {
     }
 
     private void getDailyWeather(double lat, double lon) {
+        int posLanguage = SharedPreference.getInstance(this).getInt("Language", 0);
         WeatherInfoAPI infoAPI = ApiClient.getClient().create(WeatherInfoAPI.class);
-        Call<OpenWeatherJSon> callCurrentLocation = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
-        Call<OpenWeatherNextDaysJSon> callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(lat, lon, 7, getString(R.string.appid_weather));
+        Call<OpenWeatherJSon> callCurrentLocation;
+        Call<OpenWeatherNextDaysJSon> callNextDayLocation;
+
+        if (posLanguage == 1) {
+            callCurrentLocation = infoAPI.loadCurrentWeatherByLocation(lat, lon, "ja", getString(R.string.appid_weather));
+            callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(lat, lon, 7, "ja", getString(R.string.appid_weather));
+        } else {
+            callCurrentLocation = infoAPI.loadCurrentWeatherByLocation(lat, lon, getString(R.string.appid_weather));
+            callNextDayLocation = infoAPI.loadNextDayWeatherByLocation(lat, lon, 7, getString(R.string.appid_weather));
+        }
 
         callNextDayLocation.enqueue(new Callback<OpenWeatherNextDaysJSon>() {
             @Override
@@ -83,7 +91,6 @@ public class MyNotifyService extends Service  {
                 String mornTemp = format.format(results.getList().get(0).getTemp().getMorn() - 273.15) + "°";
                 String eveTemp = format.format(results.getList().get(0).getTemp().getEve() - 273.15) + "°";
                 String nightTemp = format.format(results.getList().get(0).getTemp().getNight() - 273.15) + "°";
-                double hum = results.getList().get(0).getHumidity();
 
                 notifyContent = city + " - " + maxTemp + "/" + minTemp + "\nMorn:" + mornTemp + " Eve:" + eveTemp + " Night:" + nightTemp;
                 if (SharedPreference.getInstance(MyNotifyService.this).getInt("Language", 0) == 1) {

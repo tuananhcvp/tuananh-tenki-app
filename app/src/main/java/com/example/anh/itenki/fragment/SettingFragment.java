@@ -118,7 +118,7 @@ public class SettingFragment extends Fragment {
 
     }
 
-    public void setNotifyAlarmManager(String n) {
+    private void setNotifyAlarmManager(String n) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 0);
@@ -165,7 +165,7 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    public void refreshFragment() {
+    private void refreshFragment() {
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fmContent);
         if (currentFragment instanceof SettingFragment) {
             FragmentTransaction fragTransaction =  getFragmentManager().beginTransaction();

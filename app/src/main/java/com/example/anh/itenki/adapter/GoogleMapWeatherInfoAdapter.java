@@ -54,20 +54,20 @@ public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter 
         TextView tvSunrise = v.findViewById(R.id.tvHum);
         TextView tvSunset = v.findViewById(R.id.tvPress);
 
-        String curLocation = openWeatherJSon.getName().toString();
-        String temp = format.format(openWeatherJSon.getMain().getTemp()-273.15)+"°C";
-        String urlIconSky = context.getString(R.string.base_icon_url)+openWeatherJSon.getWeather().get(0).getIcon()+".png";
-        String stateMain = openWeatherJSon.getWeather().get(0).getMain().toString();
-        String maxMinTemp = format.format(openWeatherJSon.getMain().getTemp_max()-273.15)+"°C/"
-                + format.format(openWeatherJSon.getMain().getTemp_min()-273.15)+"°C";
-        String wind = openWeatherJSon.getWind().getSpeed()+"m/s";
-        String press = openWeatherJSon.getMain().getPressure()+"hpa";
-        String humidity = openWeatherJSon.getMain().getHumidity()+"%";
-        String state = openWeatherJSon.getWeather().get(0).getDescription().toString();
+        String curLocation = openWeatherJSon.getName();
+        String temp = format.format(openWeatherJSon.getMain().getTemp() - 273.15) + "°C";
+        String urlIconSky = context.getString(R.string.base_icon_url) + openWeatherJSon.getWeather().get(0).getIcon() + ".png";
+        String stateMain = openWeatherJSon.getWeather().get(0).getMain();
+        String maxMinTemp = format.format(openWeatherJSon.getMain().getTemp_max() - 273.15) + "°C/"
+                + format.format(openWeatherJSon.getMain().getTemp_min() - 273.15) + "°C";
+        String wind = openWeatherJSon.getWind().getSpeed() + "m/s";
+        String press = openWeatherJSon.getMain().getPressure() + "hpa";
+        String humidity = openWeatherJSon.getMain().getHumidity() + "%";
+        String state = openWeatherJSon.getWeather().get(0).getDescription();
         Date timeSunrise = new Date(openWeatherJSon.getSys().getSunrise()*1000);
-        String sunrise = timeSunrise.getHours()+":"+timeSunrise.getMinutes();
+        String sunrise = timeSunrise.getHours() + ":" + timeSunrise.getMinutes();
         Date timeSunset = new Date(openWeatherJSon.getSys().getSunset()*1000);
-        String sunset = timeSunset.getHours()+":"+timeSunset.getMinutes();
+        String sunset = timeSunset.getHours() + ":" + timeSunset.getMinutes();
 
         tvAddress.setText(curLocation);
 //        Glide.with(context).load(urlIconSky).asBitmap().into(imgIconState);

@@ -110,7 +110,6 @@ public class Utils {
      */
     public static void initProgressDialog(Activity context, ProgressDialog dialog) {
         dialog.setProgressStyle(android.R.style.Theme_Translucent_NoTitleBar);
-//        dialog.setTitle(ssTitle);
         dialog.setMessage(context.getString(R.string.dialog_data_loading));
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
