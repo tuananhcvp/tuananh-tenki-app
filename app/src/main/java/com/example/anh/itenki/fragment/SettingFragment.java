@@ -4,13 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +100,7 @@ public class SettingFragment extends Fragment {
 
                     Calendar calendar = Calendar.getInstance();
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), MainActivity.NOTIFY_REQUEST_CODE, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    AlarmManager manager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+                    AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                     manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
                 }

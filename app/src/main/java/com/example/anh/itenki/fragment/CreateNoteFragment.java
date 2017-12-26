@@ -225,5 +225,6 @@ public class CreateNoteFragment extends Fragment {
         Log.d("CreateNoteFrag", "==> onDestroyView");
         // unbind the view to free some memory
         unbinder.unbind();
+        isInitialize = false;
     }
 }
