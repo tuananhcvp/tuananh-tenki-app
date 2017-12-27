@@ -187,6 +187,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     /**
      *
      */
+    public int updateAlarmNote(AlarmNote note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_ALARM_NOTECONTENT, note.getAlarmContent());
+
+        return db.update(TABLE_ALARM, values, COLUMN_ALARM_ID + "=?", new String[]{String.valueOf(note.getAlarmId())});
+    }
+
+
+    /**
+     *
+     */
     public void deleteAlarmNote(AlarmNote note) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ALARM, COLUMN_ALARM_ID + "=?", new String[]{String.valueOf(note.getAlarmId())});

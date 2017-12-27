@@ -190,6 +190,9 @@ public class CreateNoteFragment extends Fragment {
         super.onDestroy();
         Log.d("CreateNoteFrag", "==> onDestroy");
         isInitialize = false;
+        if (note != null) {
+            note = null;
+        }
     }
 
     /**
@@ -226,5 +229,8 @@ public class CreateNoteFragment extends Fragment {
         // unbind the view to free some memory
         unbinder.unbind();
         isInitialize = false;
+        if (note != null) {
+            note = null;
+        }
     }
 }
