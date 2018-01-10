@@ -23,7 +23,6 @@ import java.util.Date;
 
 public class GoogleMapWeatherInfoAdapter implements GoogleMap.InfoWindowAdapter {
     private Activity context;
-    private Marker maker;
     private OpenWeatherJSon openWeatherJSon;
     private NumberFormat format = new DecimalFormat("#0.0");
     private Bitmap bmIcon;

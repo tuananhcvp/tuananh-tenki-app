@@ -118,6 +118,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return noteList;
     }
 
@@ -144,6 +145,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             c.moveToNext();
         }
         c.close();
+        db.close();
         return list;
     }
 
@@ -165,6 +167,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     /**
      *
      */
+    public AlarmNote getAlarmNoteWithPendingId(int pendingId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_ALARM, new String[]{COLUMN_ALARM_ID, COLUMN_ALARM_NOTECONTENT, COLUMN_ALARM_TIME, COLUMN_ALARM_PENDING_ID}, COLUMN_ALARM_PENDING_ID + "=?", new String[]{String.valueOf(pendingId)}, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        AlarmNote note = new AlarmNote(cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+        cursor.close();
+        db.close();
+        return note;
+    }
+
+    /**
+     *
+     */
     public List<AlarmNote> getListAlarmNote() {
         List<AlarmNote> alarmList = new ArrayList<AlarmNote>();
         String query = "SELECT * FROM " + TABLE_ALARM;
@@ -181,8 +198,22 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return alarmList;
     }
+
+    /**
+     *
+     */
+    public int updateAlarmNote(AlarmNote note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_ALARM_NOTECONTENT, note.getAlarmContent());
+
+        return db.update(TABLE_ALARM, values, COLUMN_ALARM_ID + "=?", new String[]{String.valueOf(note.getAlarmId())});
+    }
+
 
     /**
      *

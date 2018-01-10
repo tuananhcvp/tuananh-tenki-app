@@ -34,6 +34,11 @@ public class NoteFragment extends Fragment implements SearchView.OnQueryTextList
     private TabLayout tabsNote;
     private ViewPagerAdapter pagerAdapter;
 
+    /**
+     * NoteFragment initialize
+     *
+     * @return NoteFragment
+     */
     public static NoteFragment newInstance() {
         Bundle args = new Bundle();
         NoteFragment fragment = new NoteFragment();

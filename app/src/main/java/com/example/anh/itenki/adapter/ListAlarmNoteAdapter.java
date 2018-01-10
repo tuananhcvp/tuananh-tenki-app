@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.anh.itenki.R;
 import com.example.anh.itenki.model.AlarmNote;
-import com.example.anh.itenki.model.Note;
 
 import java.util.List;
 

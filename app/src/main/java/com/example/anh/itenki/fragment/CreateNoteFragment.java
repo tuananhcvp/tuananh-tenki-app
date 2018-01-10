@@ -32,7 +32,9 @@ import es.dmoral.toasty.Toasty;
 public class CreateNoteFragment extends Fragment {
     private static final int MODE_CREATE = 1;
     private static final int MODE_EDIT = 2;
+    private static final int MODE_ALARM_EDIT = 3;
     private Note note;
+    private AlarmNote almNote;
     private int mode;
     private boolean isInitialize = false;
 
@@ -82,8 +84,9 @@ public class CreateNoteFragment extends Fragment {
             // called here
             Log.e("CreateNoteFrag", "==> visible -- isInitialize = " + isInitialize);
             if (isInitialize) {
-                if (note != null) {
+                if (note != null || almNote != null) {
                     note = null;
+                    almNote = null;
                 }
                 edtContent.setText("");
                 String time = txtNoteTime.getText().toString();
@@ -142,7 +145,14 @@ public class CreateNoteFragment extends Fragment {
                     note.setModifyTime(modifyTime);
                     db.updateNote(note);
                     Toasty.info(getContext(), getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
+
+                } else if (mode == MODE_ALARM_EDIT) {
+                    almNote.setAlarmContent(content);
+                    db.updateAlarmNote(almNote);
+                    Toasty.info(getContext(), getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
                 }
+
+                db.close();
 
             }
         });
@@ -190,6 +200,9 @@ public class CreateNoteFragment extends Fragment {
         super.onDestroy();
         Log.d("CreateNoteFrag", "==> onDestroy");
         isInitialize = false;
+        if (note != null) {
+            note = null;
+        }
     }
 
     /**
@@ -213,7 +226,8 @@ public class CreateNoteFragment extends Fragment {
      */
     public void showNoteAlarm(AlarmNote alarmNote) {
         if (alarmNote != null) {
-            mode = 0;
+            almNote = alarmNote;
+            mode = MODE_ALARM_EDIT;
             txtNoteTime.setText(getResources().getString(R.string.alarm_at) + ": " + alarmNote.getAlarmTime());
             edtContent.setText(alarmNote.getAlarmContent());
         }
@@ -225,5 +239,9 @@ public class CreateNoteFragment extends Fragment {
         Log.d("CreateNoteFrag", "==> onDestroyView");
         // unbind the view to free some memory
         unbinder.unbind();
+        isInitialize = false;
+        if (note != null) {
+            note = null;
+        }
     }
 }

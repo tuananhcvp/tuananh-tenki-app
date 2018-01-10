@@ -11,7 +11,7 @@
     <string name="GPSAlertDialogMessage">Press \'Setting\' to enable GPS</string>
     <string name="GPSAlertDialogTitle">Setting GPS</string>
     <string name="check_internet">Check your internet connection!</string>
-    <string name="check_data_not_found">Data not found!</string>
+    <string name="check_data_not_found">Data is not found!</string>
     <string name="btn_detail">Detail</string>
     <string name="btn_seeweather">See Weather</string>
     <string name="txt_wind">Wind</string>
