@@ -2,6 +2,7 @@ package com.example.anh.itenki.activity;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MultiDex.install(this);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
