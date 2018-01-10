@@ -107,6 +107,7 @@ public class ListNoteFragment extends Fragment {
                 mCallback.sendNoteInfo(noteList.get(position));
             }
         });
+
     }
 
     @Override

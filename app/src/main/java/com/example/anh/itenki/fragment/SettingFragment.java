@@ -130,7 +130,7 @@ public class SettingFragment extends Fragment {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), MainActivity.NOTIFY_REQUEST_CODE, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*60*24, pendingIntent);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*60*6, pendingIntent);
 //        manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
     }

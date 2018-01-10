@@ -17,9 +17,7 @@ import com.example.anh.itenki.model.Note;
 import com.example.anh.itenki.utils.MyDatabaseHelper;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 

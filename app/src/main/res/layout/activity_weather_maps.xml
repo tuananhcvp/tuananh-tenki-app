@@ -24,19 +24,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
                 android:textColor="#000000"
                 android:text="@string/not_connect"/>
             <Button
                 android:id="@+id/btnReload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="0dp"
+                android:minHeight="30dp"
                 android:minWidth="0dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:text="@string/txt_reload"
                 style="@style/button" />
         </RelativeLayout>
