@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,6 +16,8 @@ import com.example.anh.itenki.R;
 import com.example.anh.itenki.model.AlarmNote;
 import com.example.anh.itenki.model.Note;
 import com.example.anh.itenki.utils.MyDatabaseHelper;
+import com.example.anh.itenki.utils.SharedPreference;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +45,7 @@ public class AlarmActivity extends AppCompatActivity {
         btnQuitAlarm = (Button)findViewById(R.id.btnQuitAlarm);
 
         final Note mNote = (Note) getIntent().getSerializableExtra("SetAlarmNote");
+        Log.e("SetAlarmNote", ": NoteContent = " + new Gson().toJson(mNote));
 
         btnSetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +59,7 @@ public class AlarmActivity extends AppCompatActivity {
                 MyDatabaseHelper db = new MyDatabaseHelper(AlarmActivity.this);
                 Intent almIntent = new Intent("com.example.anh.itenki.activity.alertalarmnoteActivity");
                 almIntent.putExtra("isSetNote", mNote);
+                SharedPreference.getInstance(AlarmActivity.this).putString("isSetNote", new Gson().toJson(mNote));
 
                 PendingIntent operation = PendingIntent.getActivity(getApplicationContext(), mNote.getId(), almIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
                 AlarmManager alarmManager = (AlarmManager)getBaseContext().getSystemService(ALARM_SERVICE);

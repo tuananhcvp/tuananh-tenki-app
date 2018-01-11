@@ -92,12 +92,9 @@ public class MyNotifyService extends Service  {
                 String eveTemp = format.format(results.getList().get(0).getTemp().getEve() - 273.15) + "°";
                 String nightTemp = format.format(results.getList().get(0).getTemp().getNight() - 273.15) + "°";
 
-                notifyContent = city + " - " + maxTemp + "/" + minTemp + "\nMorn:" + mornTemp + " Eve:" + eveTemp + " Night:" + nightTemp;
-                if (SharedPreference.getInstance(MyNotifyService.this).getInt("Language", 0) == 1) {
-                    notifyContent = city + " - " + maxTemp + "/" + minTemp + "\n" + getResources().getString(R.string.txt_morning) + ":" + mornTemp
-                            + " " + getResources().getString(R.string.txt_evening) + ":" + eveTemp
-                            + " " + getResources().getString(R.string.txt_night) + ":" + nightTemp;
-                }
+                notifyContent = city + " - " + maxTemp + "/" + minTemp + "\n" + getResources().getString(R.string.txt_morning) + ":" + mornTemp
+                        + " " + getResources().getString(R.string.txt_evening) + ":" + eveTemp
+                        + " " + getResources().getString(R.string.txt_night) + ":" + nightTemp;
 
             }
 
