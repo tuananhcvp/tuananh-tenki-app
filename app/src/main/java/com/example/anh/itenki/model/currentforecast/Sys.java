@@ -1,14 +1,22 @@
 package com.example.anh.itenki.model.currentforecast;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by anh on 2017/12/06.
  */
 
-public class Sys {
-    private double message;
-    private String country;
-    private long sunrise;
-    private long sunset;
+public class Sys implements Serializable {
+    public double message;
+    public String country;
+
+    @SerializedName("sunrise")
+    public long sunrise;
+
+    @SerializedName("sunset")
+    public long sunset;
 
     public String getCountry() {
         return country;

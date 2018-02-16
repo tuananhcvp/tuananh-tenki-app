@@ -1,17 +1,31 @@
 package com.example.anh.itenki.model.currentforecast;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by anh on 2017/12/06.
  */
 
-public class Main {
-    private double temp;
-    private double pressure;
-    private double humidity;
-    private double temp_min;
-    private double temp_max;
-    private double sea_level;
-    private double grnd_level;
+public class Main implements Serializable {
+    @SerializedName("temp")
+    public double temp;
+
+    @SerializedName("pressure")
+    public double pressure;
+
+    @SerializedName("humidity")
+    public double humidity;
+
+    @SerializedName("temp_min")
+    public double tempMin;
+
+    @SerializedName("temp_max")
+    public double tempMax;
+
+    public double sea_level;
+    public double grnd_level;
 
     public double getHumidity() {
         return humidity;
@@ -38,19 +52,19 @@ public class Main {
     }
 
     public double getTemp_max() {
-        return temp_max;
+        return tempMax;
     }
 
     public void setTemp_max(double temp_max) {
-        this.temp_max = temp_max;
+        this.tempMax = temp_max;
     }
 
     public double getTemp_min() {
-        return temp_min;
+        return tempMin;
     }
 
     public void setTemp_min(double temp_min) {
-        this.temp_min = temp_min;
+        this.tempMin = temp_min;
     }
 
     public double getGrnd_level() {

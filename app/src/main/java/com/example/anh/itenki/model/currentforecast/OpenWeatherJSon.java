@@ -1,23 +1,40 @@
 package com.example.anh.itenki.model.currentforecast;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by anh on 2017/12/06.
  */
 
-public class OpenWeatherJSon {
-    private Coord coord;
-    private List<WeatherItem> weather;
-    private String base;
-    private Main main;
-    private Wind wind;
-    private Clouds clouds;
-    private long dt;
-    private Sys sys;
-    private long id;
-    private String name;
-    private int cod;
+public class OpenWeatherJSon implements Serializable {
+    public Coord coord;
+
+    @SerializedName("weather")
+    public List<WeatherItem> weather;
+
+    public String base;
+
+    @SerializedName("main")
+    public Main main;
+
+    @SerializedName("wind")
+    public Wind wind;
+
+    public Clouds clouds;
+    public long dt;
+
+    @SerializedName("sys")
+    public Sys sys;
+
+    public long id;
+
+    @SerializedName("name")
+    public String name;
+
+    public int cod;
 
     public String getBase() {
         return base;
