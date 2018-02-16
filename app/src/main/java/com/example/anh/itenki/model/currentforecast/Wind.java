@@ -1,12 +1,18 @@
 package com.example.anh.itenki.model.currentforecast;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by anh on 2017/12/06.
  */
 
-public class Wind {
-    private double speed;
-    private double deg;
+public class Wind implements Serializable {
+    @SerializedName("speed")
+    public double speed;
+
+    public double deg;
 
     public double getDeg() {
         return deg;
