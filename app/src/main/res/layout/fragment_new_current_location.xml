@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="currentModel"
@@ -36,7 +40,8 @@
                     android:layout_gravity="center"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/text_size_title_address"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:text="@{currentModel.addressName}"/>
             </LinearLayout>
 
             <View
@@ -58,13 +63,13 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_weight="0.8">
-                        <ImageView
-                            android:id="@+id/imgIconSky"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-
-                            android:layout_gravity="center"
-                            />
+                        <!--<ImageView-->
+                            <!--android:id="@+id/imgIconSky"-->
+                            <!--android:layout_width="100dp"-->
+                            <!--android:layout_height="100dp"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--app:imageUrl="@{currentModel.imageIconUrl}"-->
+                            <!--/>-->
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="vertical"
@@ -79,6 +84,7 @@
                             android:textColor="#ffffff"
                             android:textSize="@dimen/text_size_big_temp"
                             android:textStyle="bold"
+                            android:text="@{currentModel.mainTemp}"
                             />
                         <TextView
                             android:layout_marginTop="10dp"
@@ -87,6 +93,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:textSize="@dimen/text_size_small_temp"
+                            android:text="@{currentModel.mainState}"
                             />
                         <TextView
                             android:layout_marginTop="5dp"
@@ -95,6 +102,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:textSize="@dimen/text_size_small_temp"
+                            android:text="@{currentModel.maxMinTemp}"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -136,6 +144,13 @@
                             android:textColor="#ffffff"
                             android:text="@string/txt_wind"
                             android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.wind}"
+                            android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_weight="1"
@@ -155,6 +170,13 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:text="@string/txt_pressure"
+                            android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.press}"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -185,6 +207,13 @@
                             android:textColor="#ffffff"
                             android:text="@string/txt_humidity"
                             android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.humidity}"
+                            android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_weight="1"
@@ -204,6 +233,13 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:text="@string/txt_state"
+                            android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.state}"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -234,6 +270,13 @@
                             android:textColor="#ffffff"
                             android:text="@string/txt_sunrise"
                             android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.sunriseTime}"
+                            android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_weight="1"
@@ -253,6 +296,13 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:text="@string/txt_sunset"
+                            android:textSize="@dimen/weather_detail_text_size"/>
+                        <TextView
+                            android:layout_marginLeft="2dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffff"
+                            android:text="@{currentModel.sunsetTime}"
                             android:textSize="@dimen/weather_detail_text_size"/>
                     </LinearLayout>
                 </LinearLayout>

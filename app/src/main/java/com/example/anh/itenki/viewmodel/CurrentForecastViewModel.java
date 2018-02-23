@@ -21,28 +21,27 @@ import javax.inject.Inject;
 public class CurrentForecastViewModel extends BaseObservable {
     NumberFormat format = new DecimalFormat("#0.0");
 
-    private String addressName;
-    private String imageIconUrl;
-    private String mainTemp;
-    private String mainState;
-    private String maxMinTemp;
-    private String wind;
-    private String press;
-    private String humidity;
-    private String state;
-    private String sunriseTime;
-    private String sunsetTime;
+    public String addressName;
+    public String imageIconUrl;
+    public String mainTemp;
+    public String mainState;
+    public String maxMinTemp;
+    public String wind;
+    public String press;
+    public String humidity;
+    public String state;
+    public String sunriseTime;
+    public String sunsetTime;
 
-    private Context context;
+    public Context context;
 
-    @Inject
     public CurrentForecastViewModel(Context context) {
         this.context = context;
     }
 
     public void setOpenWeather(OpenWeatherJSon openWeather) {
         addressName = openWeather.name;
-        imageIconUrl = getIconSkyUrl(openWeather);
+//        imageIconUrl = getIconSkyUrl(openWeather);
         mainTemp = getStringTemp(openWeather.main.temp);
         mainState = openWeather.weather.get(0).main;
         maxMinTemp = getStringTemp(openWeather.main.tempMax) + "/" + getStringTemp(openWeather.main.tempMin);

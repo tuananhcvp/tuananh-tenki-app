@@ -31,8 +31,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.anh.itenki.R;
+import com.example.anh.itenki.application.BaseActivity;
 import com.example.anh.itenki.fragment.AboutAppFragment;
 import com.example.anh.itenki.fragment.CurrentLocationFragment;
+import com.example.anh.itenki.fragment.NewCurrentLocationFragment;
 import com.example.anh.itenki.fragment.NoteFragment;
 import com.example.anh.itenki.fragment.SelectLocationFragment;
 import com.example.anh.itenki.fragment.SettingFragment;
@@ -61,7 +63,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -154,7 +156,8 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(0).setChecked(true);
             navigationView.getMenu().getItem(5).getSubMenu().getItem(0).setChecked(false);
 
-            callFragment(CurrentLocationFragment.newInstance());
+//            callFragment(CurrentLocationFragment.newInstance());
+            callFragment(NewCurrentLocationFragment.newInstance());
 
         } else if (id == R.id.nav_selectLocation) {
             navigationView.getMenu().getItem(1).setChecked(true);
@@ -266,7 +269,8 @@ public class MainActivity extends AppCompatActivity
             }
             settingsRequest();
         } else {
-            callFragment(CurrentLocationFragment.newInstance());
+//            callFragment(CurrentLocationFragment.newInstance());
+            callFragment(NewCurrentLocationFragment.newInstance());
         }
 
     }
