@@ -12,7 +12,7 @@ import com.example.anh.itenki.di.ActivityModule;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private ActivityComponent activityComponent;
+    ActivityComponent activityComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +21,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public ActivityComponent getComponent() {
         if (activityComponent == null) {
+            MyApplication application = (MyApplication) getApplication();
 //            DaggerActivityComponent.builder()
 //                    .activityModule(new ActivityModule(this))
 //                    .build();
+            activityComponent = application.getApplicationComponent().plus(new ActivityModule(this));
+
         }
         return activityComponent;
     }

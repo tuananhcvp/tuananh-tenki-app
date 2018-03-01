@@ -13,6 +13,7 @@ import com.example.anh.itenki.R;
 import com.example.anh.itenki.activity.ForecastDetailActivity;
 import com.example.anh.itenki.activity.MainActivity;
 import com.example.anh.itenki.activity.SplashScreenActivity;
+import com.example.anh.itenki.application.BaseActivity;
 import com.example.anh.itenki.databinding.FragmentNewCurrentLocationBinding;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
@@ -27,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +43,8 @@ public class NewCurrentLocationFragment extends Fragment {
 
     private FragmentNewCurrentLocationBinding binding;
 
-    CurrentForecastViewModel viewModel = new CurrentForecastViewModel(getContext());
+    @Inject
+    CurrentForecastViewModel viewModel;
 
 //    @BindView(R.id.btnDetail)
 //    Button btnDetail;
@@ -84,7 +88,7 @@ public class NewCurrentLocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_new_current_location, container, false);
-//        ((BaseActivity) getActivity()).getComponent().inject(this);
+        ((BaseActivity) getActivity()).getComponent().inject(this);
         binding = FragmentNewCurrentLocationBinding.bind(layout);
         binding.setCurrentModel(viewModel);
 

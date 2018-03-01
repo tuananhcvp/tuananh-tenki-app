@@ -5,23 +5,23 @@ import android.app.Application;
 import com.example.anh.itenki.di.ActivityScope;
 import com.example.anh.itenki.di.ApplicationComponent;
 import com.example.anh.itenki.di.ApplicationModule;
-//import com.example.anh.itenki.di.DaggerApplicationComponent;
+import com.example.anh.itenki.di.DaggerApplicationComponent;
 
 /**
  * Created by anh on 2018/02/20.
  */
 
 @ActivityScope
-public class MyApp extends Application {
+public class MyApplication extends Application {
     private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-//        applicationComponent = DaggerApplicationComponent.builder()
-//                .applicationModule(new ApplicationModule())
-//                .build();
+        applicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
 
     }
 

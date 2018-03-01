@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
@@ -63,13 +64,14 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_weight="0.8">
-                        <!--<ImageView-->
-                            <!--android:id="@+id/imgIconSky"-->
-                            <!--android:layout_width="100dp"-->
-                            <!--android:layout_height="100dp"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--app:imageUrl="@{currentModel.imageIconUrl}"-->
-                            <!--/>-->
+                        <ImageView
+                            android:id="@+id/imgIconSky"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center"
+                            bind:error="@{@drawable/noimg_pdt_xl}"
+                            bind:imageUrl="@{currentModel.imageIconUrl}"
+                            />
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="vertical"

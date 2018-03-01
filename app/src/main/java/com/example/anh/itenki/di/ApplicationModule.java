@@ -1,5 +1,8 @@
 package com.example.anh.itenki.di;
 
+import android.app.Application;
+import android.content.Context;
+
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
@@ -16,7 +19,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApplicationModule {
     public static final String BASE_URL = "http://api.openweathermap.org/";
 
+    private final Application application;
+
+    public ApplicationModule(Application application) {
+        this.application = application;
+    }
+
     @Provides
+    @ApplicationScope
+    Context provideApplicationContext() {
+        return application.getApplicationContext();
+    }
+
+    @Provides
+    @ApplicationScope
     Retrofit provideRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(15, TimeUnit.SECONDS)

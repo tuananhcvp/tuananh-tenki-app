@@ -3,6 +3,7 @@ package com.example.anh.itenki.viewmodel;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.Log;
 
 import com.example.anh.itenki.BR;
 import com.example.anh.itenki.R;
@@ -35,13 +36,15 @@ public class CurrentForecastViewModel extends BaseObservable {
 
     public Context context;
 
+    @Inject
     public CurrentForecastViewModel(Context context) {
         this.context = context;
     }
 
     public void setOpenWeather(OpenWeatherJSon openWeather) {
         addressName = openWeather.name;
-//        imageIconUrl = getIconSkyUrl(openWeather);
+        imageIconUrl = getIconSkyUrl(openWeather);
+        Log.e("TEST_TA","=> " + imageIconUrl);
         mainTemp = getStringTemp(openWeather.main.temp);
         mainState = openWeather.weather.get(0).main;
         maxMinTemp = getStringTemp(openWeather.main.tempMax) + "/" + getStringTemp(openWeather.main.tempMin);
@@ -53,7 +56,6 @@ public class CurrentForecastViewModel extends BaseObservable {
         sunsetTime = getStringTime(openWeather.sys.sunset);
 
         notifyPropertyChanged(BR.addressName);
-        notifyPropertyChanged(BR.imageIconUrl);
         notifyPropertyChanged(BR.mainTemp);
         notifyPropertyChanged(BR.mainState);
         notifyPropertyChanged(BR.maxMinTemp);
@@ -63,6 +65,7 @@ public class CurrentForecastViewModel extends BaseObservable {
         notifyPropertyChanged(BR.state);
         notifyPropertyChanged(BR.sunriseTime);
         notifyPropertyChanged(BR.sunsetTime);
+        notifyChange();
     }
 
     @Bindable
@@ -70,8 +73,7 @@ public class CurrentForecastViewModel extends BaseObservable {
         return addressName;
     }
 
-    @Bindable
-    public String getImageIconUrl() {
+    public String imageIconUrl() {
         return imageIconUrl;
     }
 
