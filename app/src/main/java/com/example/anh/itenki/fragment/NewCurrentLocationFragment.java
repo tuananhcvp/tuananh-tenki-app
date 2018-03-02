@@ -21,18 +21,28 @@ import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
 import com.example.anh.itenki.utils.WeatherInfoAPI;
+import com.example.anh.itenki.utils.repository.WeatherRepository;
 import com.example.anh.itenki.viewmodel.CurrentForecastViewModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by anh on 2018/02/16.
@@ -45,6 +55,9 @@ public class NewCurrentLocationFragment extends Fragment {
 
     @Inject
     CurrentForecastViewModel viewModel;
+
+    @Inject
+    WeatherRepository repository;
 
 //    @BindView(R.id.btnDetail)
 //    Button btnDetail;
@@ -104,11 +117,13 @@ public class NewCurrentLocationFragment extends Fragment {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+//                    loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+                    loadWeather(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
                 }
             }, 1000);
         } else {
-            loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+//            loadCurrentWeatherByLocation(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
+            loadWeather(SplashScreenActivity.latitude, SplashScreenActivity.longitude);
         }
 
         binding.btnDetail.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +183,41 @@ public class NewCurrentLocationFragment extends Fragment {
 
             }
         });
+
+    }
+
+    private void loadWeather(final double lat, final double lon) {
+        Observable<OpenWeatherJSon> weatherObservable = Observable.fromCallable(new Callable<OpenWeatherJSon>() {
+            @Override
+            public OpenWeatherJSon call() throws Exception {
+                return repository.getCurrentWeatherByLocation(lat, lon, getResources().getString(R.string.appid_weather));
+            }
+        });
+
+        weatherObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<OpenWeatherJSon>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(OpenWeatherJSon value) {
+                        viewModel.setOpenWeather(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
     }
 

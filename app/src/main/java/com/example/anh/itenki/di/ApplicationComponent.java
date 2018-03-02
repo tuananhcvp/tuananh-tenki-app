@@ -14,7 +14,5 @@ import retrofit2.Retrofit;
 @ApplicationScope
 @Component(modules = {ApplicationModule.class})
 public interface ApplicationComponent {
-    Retrofit retrofit();
-
     ActivityComponent plus(ActivityModule module);
 }

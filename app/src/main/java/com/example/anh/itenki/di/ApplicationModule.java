@@ -3,6 +3,10 @@ package com.example.anh.itenki.di;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.anh.itenki.utils.api.PlatformAPI;
+import com.example.anh.itenki.utils.repository.WeatherRepository;
+import com.example.anh.itenki.utils.repository.WeatherRepositoryInterface;
+
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
@@ -27,13 +31,13 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationScope
-    Context provideApplicationContext() {
+    public Context provideApplicationContext() {
         return application.getApplicationContext();
     }
 
     @Provides
     @ApplicationScope
-    Retrofit provideRetrofit() {
+    public PlatformAPI providePlatformAPI() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
@@ -44,6 +48,13 @@ public class ApplicationModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
-        return retrofit;
+
+        return retrofit.create(PlatformAPI.class);
+    }
+
+    @Provides
+    @ApplicationScope
+    public WeatherRepositoryInterface provideWeatherRepositoryInterface(PlatformAPI platformAPI) {
+        return new WeatherRepository(platformAPI);
     }
 }
