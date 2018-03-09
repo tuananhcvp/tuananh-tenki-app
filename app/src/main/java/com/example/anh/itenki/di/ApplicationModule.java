@@ -9,8 +9,13 @@ import com.example.anh.itenki.utils.repository.WeatherRepositoryInterface;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -56,5 +61,17 @@ public class ApplicationModule {
     @ApplicationScope
     public WeatherRepositoryInterface provideWeatherRepositoryInterface(PlatformAPI platformAPI) {
         return new WeatherRepository(platformAPI);
+    }
+
+    @Provides
+    @Named("executeScheduler")
+    public Scheduler provideExecutionScheduler() {
+        return Schedulers.io();
+    }
+
+    @Provides
+    @Named("postScheduler")
+    public Scheduler providePostScheduler() {
+        return AndroidSchedulers.mainThread();
     }
 }

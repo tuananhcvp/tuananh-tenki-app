@@ -69,7 +69,6 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
-                            bind:error="@{@drawable/noimg_pdt_xl}"
                             bind:imageUrl="@{currentModel.imageIconUrl}"
                             />
                     </LinearLayout>

@@ -17,6 +17,7 @@ import com.example.anh.itenki.application.BaseActivity;
 import com.example.anh.itenki.databinding.FragmentNewCurrentLocationBinding;
 import com.example.anh.itenki.model.ApiClient;
 import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
+import com.example.anh.itenki.usecase.WeatherCurrentUseCase;
 import com.example.anh.itenki.utils.LocationService;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.Utils;
@@ -33,9 +34,13 @@ import org.reactivestreams.Subscription;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -43,6 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
 /**
  * Created by anh on 2018/02/16.
@@ -58,6 +64,19 @@ public class NewCurrentLocationFragment extends Fragment {
 
     @Inject
     WeatherRepository repository;
+
+    @Inject
+    @Named("executeScheduler")
+    Scheduler threadExecutor;
+
+    @Inject
+    @Named("postScheduler")
+    Scheduler postExecutionThread;
+
+    @Inject
+    WeatherCurrentUseCase useCase;
+
+    private String APP_ID;
 
 //    @BindView(R.id.btnDetail)
 //    Button btnDetail;
@@ -105,6 +124,7 @@ public class NewCurrentLocationFragment extends Fragment {
         binding = FragmentNewCurrentLocationBinding.bind(layout);
         binding.setCurrentModel(viewModel);
 
+        APP_ID = getActivity().getResources().getString(R.string.appid_weather);
         return layout;
     }
 
@@ -187,37 +207,73 @@ public class NewCurrentLocationFragment extends Fragment {
     }
 
     private void loadWeather(final double lat, final double lon) {
-        Observable<OpenWeatherJSon> weatherObservable = Observable.fromCallable(new Callable<OpenWeatherJSon>() {
+//        Observable<OpenWeatherJSon> weatherObservable = Observable.fromCallable(new Callable<OpenWeatherJSon>() {
+//            @Override
+//            public OpenWeatherJSon call() throws Exception {
+//                return repository.getCurrentWeatherByLocation(lat, lon, getResources().getString(R.string.appid_weather));
+//            }
+//        });
+//
+//        weatherObservable
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<OpenWeatherJSon>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(OpenWeatherJSon value) {
+//                        viewModel.setOpenWeather(value);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+
+//        Single<OpenWeatherJSon> weatherJSonSingle = Single.fromCallable(() -> repository.getCurrentWeatherByLocation(lat, lon, getResources().getString(R.string.appid_weather)));
+//
+//        weatherJSonSingle
+//                .subscribeOn(threadExecutor)
+//                .observeOn(postExecutionThread)
+//                .subscribe(new SingleObserver<OpenWeatherJSon>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(OpenWeatherJSon value) {
+//                        viewModel.setOpenWeather(value);
+//                        curLocation = value.getName();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//                });
+
+        useCase.excute(lat, lon, APP_ID, new WeatherCurrentUseCase.UseCaseCallback() {
             @Override
-            public OpenWeatherJSon call() throws Exception {
-                return repository.getCurrentWeatherByLocation(lat, lon, getResources().getString(R.string.appid_weather));
+            public void onSuccess(OpenWeatherJSon entity) {
+                viewModel.setOpenWeather(entity);
+                curLocation = entity.getName();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                t.printStackTrace();
             }
         });
-
-        weatherObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<OpenWeatherJSon>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(OpenWeatherJSon value) {
-                        viewModel.setOpenWeather(value);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
 
     }
 

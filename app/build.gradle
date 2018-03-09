@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 buildscript {
     repositories {
@@ -24,6 +25,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
+
+//        jackOptions {
+//            enabled true
+//        }
     }
 
     dexOptions {
@@ -35,6 +40,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -71,6 +81,8 @@ dependencies {
     // butter knife
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    compile 'com.jakewharton.timber:timber:3.1.0'
 
 //    // apt command comes from the android-apt plugin
 //    apt 'com.google.dagger:dagger-compiler:2.7'
