@@ -27,18 +27,16 @@
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
+        android:configChanges="locale|orientation|keyboardHidden"
         android:icon="@mipmap/snow_occasional_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:configChanges="locale|orientation|keyboardHidden" >
-
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SplashScreenActivity"
             android:screenOrientation="portrait">
@@ -48,26 +46,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.SelectedLocationWeatherActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ForecastDetailActivity"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".activity.NewForecastDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AlarmActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.AlertAlarmNoteActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.example.anh.itenki.activity.alertalarmnoteActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.example.anh.itenki.activity.alertalarmnoteActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -83,7 +80,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

@@ -2,7 +2,7 @@ package com.example.anh.itenki.usecase;
 
 import android.content.Context;
 
-import com.example.anh.itenki.model.currentforecast.OpenWeatherJSon;
+import com.example.anh.itenki.model.dailyforecast.OpenWeatherDailyJSon;
 import com.example.anh.itenki.utils.SharedPreference;
 import com.example.anh.itenki.utils.repository.WeatherRepository;
 
@@ -11,23 +11,20 @@ import javax.inject.Named;
 
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
-import io.reactivex.disposables.Disposable;
 
 /**
- * Created by anh on 2018/03/06.
+ * Created by anh on 2018/03/22.
  */
 
-public class WeatherCurrentUseCase extends UseCase {
+public class WeatherDailyUseCase extends UseCase {
     private WeatherRepository weatherRepository;
     private Context context;
 
     @Inject
-    public WeatherCurrentUseCase(WeatherRepository weatherRepository, Context context,
-                                  @Named("executeScheduler") Scheduler threadExecutor,
-                                  @Named("postScheduler") Scheduler postExecutionThread) {
+    public WeatherDailyUseCase(WeatherRepository weatherRepository, Context context,
+                               @Named("executeScheduler") Scheduler threadExecutor,
+                               @Named("postScheduler") Scheduler postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.weatherRepository = weatherRepository;
         this.context = context;
@@ -36,11 +33,11 @@ public class WeatherCurrentUseCase extends UseCase {
     public void excute(double lat, double lon, String appId, UseCaseCallback callback) {
         int posLanguage = SharedPreference.getInstance(context).getInt("Language", 0);
 
-        SingleOnSubscribe<OpenWeatherJSon> emitter = e -> {
+        SingleOnSubscribe<OpenWeatherDailyJSon> emitter = e -> {
             if (posLanguage == 1) {
-                e.onSuccess(weatherRepository.getCurrentWeatherByLocation(lat, lon, "ja", appId));
+                e.onSuccess(weatherRepository.getDailyWeatherByLocation(lat, lon, "ja", appId));
             } else {
-                e.onSuccess(weatherRepository.getCurrentWeatherByLocation(lat, lon, appId));
+                e.onSuccess(weatherRepository.getDailyWeatherByLocation(lat, lon, appId));
             }
         };
 
@@ -56,11 +53,11 @@ public class WeatherCurrentUseCase extends UseCase {
     public void excute(String name, String appId, UseCaseCallback callback) {
         int posLanguage = SharedPreference.getInstance(context).getInt("Language", 0);
 
-        SingleOnSubscribe<OpenWeatherJSon> emitter = e -> {
+        SingleOnSubscribe<OpenWeatherDailyJSon> emitter = e -> {
             if (posLanguage == 1) {
-                e.onSuccess(weatherRepository.getCurrentWeatherByName(name, "ja", appId));
+                e.onSuccess(weatherRepository.getDailyWeatherByName(name, "ja", appId));
             } else {
-                e.onSuccess(weatherRepository.getCurrentWeatherByName(name, appId));
+                e.onSuccess(weatherRepository.getDailyWeatherByName(name, appId));
             }
         };
 
@@ -70,22 +67,12 @@ public class WeatherCurrentUseCase extends UseCase {
                 .subscribe(
                         callback::onSuccess,
                         callback::onError);
-    }
 
+    }
 
     public interface UseCaseCallback {
-        void onSuccess(OpenWeatherJSon entity);
+        void onSuccess(OpenWeatherDailyJSon entity);
 
         void onError(Throwable t);
-    }
-
-    public static class RequestParameter {
-        public static final String TypeName = "TypeName";
-        public static final String TypeLocation = "TypeLocation";
-
-        public String appId;
-        public double lat;
-        public double lon;
-        public String name;
     }
 }

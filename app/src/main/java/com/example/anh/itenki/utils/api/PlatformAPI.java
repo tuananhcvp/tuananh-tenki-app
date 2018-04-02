@@ -45,9 +45,9 @@ public interface PlatformAPI {
     Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByLocation(@Query("lat") Double lat, @Query("lon") Double lon, @Query("cnt") int cnt, @Query("lang") String lang, @Query("appid") String appid);
 
     @GET("data/2.5/forecast/daily")
-    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("appid") String appid);
+    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("cnt") int cnt, @Query("appid") String appid);
 
     //When language = ja
     @GET("data/2.5/forecast/daily")
-    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("lang") String lang, @Query("appid") String appid);
+    Call<OpenWeatherNextDaysJSon> loadNextDayWeatherByName(@Query("q") String name, @Query("cnt") int cnt, @Query("lang") String lang, @Query("appid") String appid);
 }
