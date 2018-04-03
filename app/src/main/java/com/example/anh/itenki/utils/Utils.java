@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -141,6 +142,25 @@ public class Utils {
      */
     public static void showToastNotify(Context context, String content) {
         Toasty.info(context, content, Toast.LENGTH_SHORT, true).show();
+    }
+
+    /**
+     * @param view TextView
+     * @param maxLines 最大行数
+     * @param where 省略する箇所
+     */
+    public static void setMultilineEllipsize(TextView view, int maxLines, TextUtils.TruncateAt where) {
+        if (maxLines >= view.getLineCount()) {
+            // ellipsizeする必要無し
+            return;
+        }
+        float avail = 0.0f;
+        for (int i = 0; i < maxLines; i++) {
+            avail += view.getLayout().getLineMax(i);
+        }
+        CharSequence ellipsizedText = TextUtils.ellipsize(
+                view.getText(), view.getPaint(), avail, where);
+        view.setText(ellipsizedText);
     }
 }
 
